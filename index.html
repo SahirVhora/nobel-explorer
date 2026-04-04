@@ -109,9 +109,9 @@ img{max-width:100%;height:auto;}
 .filt-sel:focus{outline:none;border-color:var(--gold);}
 .results-info{color:var(--text-muted);font-size:.82rem;margin-bottom:14px;}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;margin-bottom:28px;}
-/* Laureate Card */
-.l-card{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;transition:all .3s;display:flex;flex-direction:column;}
-.l-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:var(--gold-bright);}
+/* Laureate Card — front face inherits these */
+.l-card{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;height:100%;}
+/* Hover lift lives on the flip wrapper, not l-card */
 .card-hd{padding:14px 18px 10px;border-bottom:3px solid var(--border);display:flex;align-items:center;gap:11px;}
 .card-av{width:44px;height:44px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
 .card-nm{font-size:.95rem;font-weight:700;color:var(--text);}
@@ -257,6 +257,56 @@ footer a{color:var(--gold);}
 .modal-name{font-size:1.5rem;font-weight:800;margin-bottom:4px;}
 .modal-meta{color:var(--text-muted);font-size:.88rem;margin-bottom:14px;}
 .modal-motiv{font-size:.9rem;font-style:italic;color:var(--text-muted);line-height:1.65;margin-bottom:18px;}
+/* ══════════════════════════════════════════════
+   CARD FLIP
+══════════════════════════════════════════════ */
+.flip-card{height:290px;perspective:1200px;cursor:pointer;transition:transform .25s;}
+.flip-card:not(.flipped):hover{transform:translateY(-5px);}
+.flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .52s cubic-bezier(.4,0,.2,1);}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);}
+.flip-front{overflow:hidden;}
+.flip-back{transform:rotateY(180deg);background:var(--bg-card);border:2px solid var(--gold);box-shadow:var(--shadow-hover);display:flex;flex-direction:column;padding:15px 17px;overflow:hidden;}
+.flip-back-name{font-size:1rem;font-weight:800;color:var(--text);margin-bottom:3px;}
+.flip-back-dates{font-size:.75rem;color:var(--text-muted);margin-bottom:9px;}
+.flip-back-prizes{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:9px;}
+.flip-back-motiv{font-size:.79rem;font-style:italic;color:var(--text-muted);line-height:1.5;flex:1;overflow-y:auto;padding-right:2px;}
+.flip-back-motiv p{margin-bottom:7px;}
+.flip-back-motiv p:last-child{margin-bottom:0;}
+.flip-back-footer{margin-top:auto;padding-top:8px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;border-top:1px solid var(--border);}
+.flip-back-wiki{padding:5px 13px;border-radius:14px;background:var(--gold);color:#fff!important;font-size:.75rem;font-weight:700;white-space:nowrap;}
+.flip-back-wiki:hover{background:var(--gold-mid);text-decoration:none;}
+.flip-hint{font-size:.62rem;color:var(--text-muted);opacity:.7;}
+.multi-badge-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
+/* ══════════════════════════════════════════════
+   STORIES — PULL-QUOTE REDESIGN
+══════════════════════════════════════════════ */
+.stories-hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
+.stories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
+.story-card{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);border-left:5px solid var(--gold);overflow:hidden;transition:all .3s;}
+.story-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);}
+.st-physics{border-left-color:var(--physics)!important;}
+.st-chemistry{border-left-color:var(--chemistry)!important;}
+.st-medicine{border-left-color:var(--medicine)!important;}
+.st-peace{border-left-color:var(--peace)!important;}
+.st-literature{border-left-color:var(--literature)!important;}
+.st-economics{border-left-color:var(--economics)!important;}
+.story-top{padding:16px 20px 8px;display:flex;align-items:center;gap:10px;}
+.story-ico{font-size:2rem;}
+.story-tag{font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:10px;background:var(--gold-pale);color:var(--gold);}
+.story-body{padding:0 20px 20px;}
+.story-pull-name{font-size:1.35rem;font-weight:800;line-height:1.2;margin-bottom:4px;color:var(--text);}
+.story-pull-meta{color:var(--text-muted);font-size:.79rem;margin-bottom:12px;}
+.story-pull-quote{font-size:.92rem;line-height:1.7;color:var(--text-muted);padding-left:14px;border-left:3px solid var(--gold-bright);margin-left:0;font-style:italic;}
+.story-link{display:inline-block;margin-top:11px;color:var(--gold);font-size:.8rem;font-weight:700;}
+/* ══════════════════════════════════════════════
+   QUIZ SCORE BAR
+══════════════════════════════════════════════ */
+.quiz-score-bar{background:var(--bg-card);border-radius:10px;padding:11px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);box-shadow:var(--shadow);}
+.qsb-label{font-size:.8rem;color:var(--text-muted);font-weight:600;}
+.qsb-val{font-size:1.1rem;font-weight:800;color:var(--gold);}
+.qsb-correct{color:#10B981;}
+.qsb-wrong{color:#EF4444;}
 </style>
 </head>
 <body>
@@ -355,8 +405,13 @@ footer a{color:var(--gold);}
 
 <!-- ── STORIES ── -->
 <section id="stories" class="section" aria-labelledby="st-h1">
-  <h1 class="section-title" id="st-h1">Inspiring Stories</h1>
-  <p class="section-sub">Remarkable laureates and moments that made Nobel history</p>
+  <div class="stories-hd">
+    <div>
+      <h1 class="section-title" id="st-h1" style="margin-bottom:4px;">Inspiring Stories</h1>
+      <p class="section-sub" style="margin-bottom:0;">Remarkable laureates and moments that made Nobel history</p>
+    </div>
+    <button class="btn-secondary" onclick="shuffleStories()" aria-label="Show different random stories">🎲 Shuffle Stories</button>
+  </div>
   <div id="storiesGrid" class="stories-grid"></div>
 </section>
 
@@ -365,6 +420,10 @@ footer a{color:var(--gold);}
   <h1 class="section-title" id="qz-h1">Nobel Quiz</h1>
   <p class="section-sub">Test your knowledge with 5 random questions — every game is different!</p>
   <div class="quiz-box">
+    <div id="quizScoreBar" class="quiz-score-bar" style="display:none;" aria-live="polite">
+      <span class="qsb-label">Running Score</span>
+      <span id="quizScoreVal" class="qsb-val">0 / 0</span>
+    </div>
     <div id="quizProg" class="quiz-prog" role="progressbar" aria-label="Quiz progress"></div>
     <div id="quizContent"></div>
   </div>
@@ -538,20 +597,28 @@ function toggleMenu() {
 // HOME
 // ════════════════════════════════════════════════════════
 function renderHome() {
+  // num: number to count up to; suffix: appended after; lbl: label
   const stats = [
-    {ico:'🏆', val: D.total, lbl:'Total Laureates'},
-    {ico:'🌍', val: D.sortedCnts.length, lbl:'Birth Countries'},
-    {ico:'👩‍🔬', val: `${D.females} (${D.femalePct}%)`, lbl:'Women Laureates'},
-    {ico:'🧒', val: D.youngest?.age ?? '—', lbl:`Youngest Winner${D.youngest ? ' · '+D.youngest.firstname+' '+D.youngest.surname : ''}`},
-    {ico:'👴', val: D.oldest?.age ?? '—', lbl:`Oldest Winner${D.oldest ? ' · '+D.oldest.firstname+' '+D.oldest.surname : ''}`},
-    {ico:'📅', val: `${D.minY}–${D.maxY}`, lbl:'Years of Prizes'},
+    {ico:'🏆', num: D.total,             suffix:'',                lbl:'Total Laureates'},
+    {ico:'🌍', num: D.sortedCnts.length, suffix:' countries',      lbl:'Countries Represented'},
+    {ico:'👩‍🔬', num: D.females,           suffix:` (${D.femalePct}%)`, lbl:'Women Laureates'},
+    {ico:'🧒', num: D.youngest?.age,     suffix:'',                lbl:`Youngest at Award${D.youngest ? ' · '+D.youngest.firstname+' '+D.youngest.surname : ''}`},
+    {ico:'👴', num: D.oldest?.age,       suffix:'',                lbl:`Oldest at Award${D.oldest ? ' · '+D.oldest.firstname+' '+D.oldest.surname : ''}`},
+    {ico:'📅', num: null, suffix:`${D.minY}–${D.maxY}`,            lbl:'Years of Prizes'},
   ];
-  document.getElementById('homeStats').innerHTML = stats.map(s => `
+  document.getElementById('homeStats').innerHTML = stats.map((s,i) => `
     <div class="stat-card" tabindex="0">
       <span class="stat-icon" aria-hidden="true">${s.ico}</span>
-      <span class="stat-value">${s.val}</span>
+      <span class="stat-value" id="sv${i}">${s.num == null ? esc(s.suffix) : '0'+esc(s.suffix)}</span>
       <span class="stat-label">${esc(s.lbl)}</span>
     </div>`).join('');
+
+  // Trigger count-up after DOM paint
+  requestAnimationFrame(() => {
+    stats.forEach((s, i) => {
+      if (s.num != null) countUp(document.getElementById('sv'+i), s.num, s.suffix);
+    });
+  });
 
   document.getElementById('recentCards').innerHTML = D.recent.map(l => buildCard(l)).join('');
 }
@@ -617,7 +684,7 @@ function applyFilters() {
   const cnt = document.getElementById('cntFilter')?.value || 'all';
   const gen = document.getElementById('genFilter')?.value || 'all';
 
-  const filtered = LAUREATES.filter(l => {
+  const raw = LAUREATES.filter(l => {
     if (cat !== 'all' && l.category !== cat) return false;
     if (dec !== 'all' && Math.floor(l.year/10)*10 !== +dec) return false;
     if (gen !== 'all' && l.gender !== gen) return false;
@@ -629,9 +696,27 @@ function applyFilters() {
     return true;
   });
 
-  state.exp.filtered = filtered;
+  state.exp.filtered = dedupePersons(raw);
   state.exp.page = 1;
   renderCards();
+}
+
+// Merge multi-prize winners into one entry with a ._prizes array.
+// Orgs stay separate (unique per year/category).
+function dedupePersons(arr) {
+  const map = new Map();
+  arr.forEach(l => {
+    const k = l.gender === 'org'
+      ? `org||${l.firstname}||${l.year}||${l.category}`
+      : `${l.firstname}||${l.surname}`;
+    if (!map.has(k)) map.set(k, []);
+    map.get(k).push(l);
+  });
+  return [...map.values()].map(group => {
+    if (group.length === 1) return group[0];
+    const sorted = [...group].sort((a,b) => a.year - b.year);
+    return {...sorted[0], _prizes: sorted};
+  });
 }
 
 function renderCards() {
@@ -679,31 +764,92 @@ function goPage(p) {
 }
 
 // ════════════════════════════════════════════════════════
-// CARD BUILDER
+// CARD BUILDER — with CSS 3D flip
 // ════════════════════════════════════════════════════════
+function flipCard(el) {
+  el.classList.toggle('flipped');
+}
+
 function buildCard(l) {
+  // Support both single-prize (raw laureate) and merged multi-prize objects
+  const prizes = l._prizes || [l];
   const name = `${l.firstname} ${l.surname}`.trim();
-  const cat = l.category;
-  const catLbl = CAT_LABEL[cat] || cat;
+  const primaryCat = prizes[0].category;
   const country = normC(l.bornCountry);
-  const motiv = l.motivation ? l.motivation.replace(/^"|"$/g,'') : '';
   const gIco = l.gender==='org' ? '🏢' : l.gender==='female' ? '👩' : '👨';
-  const ageStr = (() => {
-    const a = D.ageAt(l);
-    return a ? ` · Age ${a}` : '';
-  })();
-  return `<article class="l-card c-${cat}" tabindex="0" aria-label="${esc(name)}, ${catLbl} ${l.year}">
-  <div class="card-hd">
-    <div class="card-av" aria-hidden="true">${CAT_EMOJI[cat]||'🏅'}</div>
-    <div><div class="card-nm">${esc(name)}</div><div class="card-yr">${l.year}${ageStr} ${gIco}</div></div>
+  const isMulti = prizes.length > 1;
+
+  // Front: year(s) with prize-age
+  const yearStr = prizes.map(p => {
+    const a = D.ageAt(p);
+    return `${p.year}${a ? ' (age '+a+')' : ''}`;
+  }).join(' · ');
+
+  // Front: prize badges
+  const badgesHtml = prizes.map(p =>
+    `<span class="cat-badge bg-${p.category}">${CAT_LABEL[p.category]||p.category}${isMulti?' '+p.year:''}</span>`
+  ).join(' ');
+
+  // Front: short motivation from first prize
+  const frontMotiv = prizes[0].motivation ? prizes[0].motivation.replace(/^"|"$/g,'') : '';
+
+  // Back: birth/death line
+  const born = l.born && l.born !== '0000-00-00' ? l.born.slice(0,4) : '?';
+  const died = l.died && l.died !== '0000-00-00' ? ' · Died ' + l.died.slice(0,4) : '';
+  const city  = l.bornCity ? esc(l.bornCity) + ', ' : '';
+  const datesLine = `b. ${born}${died} · ${city}${esc(country||'Unknown')}`;
+
+  // Back: per-prize motivations
+  const backMotivs = prizes.map(p => {
+    const m = p.motivation ? p.motivation.replace(/^"|"$/g,'') : '';
+    return m
+      ? `<p><span style="font-style:normal;font-weight:700;color:var(--text);">${CAT_LABEL[p.category]} ${p.year}:</span> ${esc(m)}</p>`
+      : '';
+  }).join('');
+
+  const wikiUrl = l.wiki_url || prizes.find(p=>p.wiki_url)?.wiki_url || '';
+
+  return `<div class="flip-card c-${primaryCat}" onclick="flipCard(this)"
+     tabindex="0" role="button"
+     aria-label="${esc(name)}${isMulti?' — '+prizes.length+'× laureate':''}, click to see details"
+     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();flipCard(this);}">
+  <div class="flip-inner">
+
+    <!-- FRONT -->
+    <div class="flip-front l-card">
+      <div class="card-hd">
+        <div class="card-av" aria-hidden="true">${isMulti ? '🏆' : (CAT_EMOJI[primaryCat]||'🏅')}</div>
+        <div>
+          <div class="card-nm">${esc(name)}</div>
+          <div class="card-yr">${esc(yearStr)} ${gIco}</div>
+        </div>
+      </div>
+      <div class="card-bd">
+        <div class="multi-badge-row">${badgesHtml}</div>
+        ${country ? `<div class="card-country">📍 ${esc(country)}</div>` : ''}
+        ${frontMotiv ? `<div class="card-motiv">${esc(frontMotiv)}</div>` : ''}
+      </div>
+      <div class="flip-hint" style="padding:6px 18px;text-align:right;">↩ flip for details</div>
+    </div>
+
+    <!-- BACK -->
+    <div class="flip-back">
+      <div>
+        <div class="flip-back-prizes">${prizes.map(p=>`<span class="cat-badge bg-${p.category}">${CAT_LABEL[p.category]} ${p.year}</span>`).join('')}</div>
+        <div class="flip-back-name">${esc(name)}</div>
+        <div class="flip-back-dates">${datesLine}</div>
+      </div>
+      <div class="flip-back-motiv">${backMotivs || '<em style="color:var(--text-muted)">No motivation recorded.</em>'}</div>
+      <div class="flip-back-footer">
+        ${wikiUrl
+          ? `<a href="${esc(wikiUrl)}" target="_blank" rel="noopener noreferrer" class="flip-back-wiki" onclick="event.stopPropagation()">📖 Wikipedia ↗</a>`
+          : '<span></span>'}
+        <span class="flip-hint">↩ flip back</span>
+      </div>
+    </div>
+
   </div>
-  <div class="card-bd">
-    <span class="cat-badge bg-${cat}">${catLbl}</span>
-    ${country ? `<div class="card-country">📍 ${esc(country)}</div>` : ''}
-    ${motiv ? `<div class="card-motiv">${esc(motiv)}</div>` : ''}
-  </div>
-  ${l.wiki_url ? `<div class="card-ft"><a href="${esc(l.wiki_url)}" target="_blank" rel="noopener noreferrer" class="wiki-link" aria-label="Wikipedia: ${esc(name)}">📖 Wikipedia ↗</a></div>` : ''}
-</article>`;
+</div>`;
 }
 
 // ════════════════════════════════════════════════════════
@@ -921,131 +1067,153 @@ function initMap() {
 // ════════════════════════════════════════════════════════
 // INSPIRING STORIES
 // ════════════════════════════════════════════════════════
-let storiesInited = false;
+let ALL_STORIES = null;
+
+function shuffleStories() {
+  renderStoriesDisplay(shuffle(ALL_STORIES).slice(0, 6));
+}
+
+function renderStoriesDisplay(list) {
+  document.getElementById('storiesGrid').innerHTML = list.map(s => `
+    <article class="story-card st-${s.cat||'gold'}" tabindex="0">
+      <div class="story-top">
+        <span class="story-ico" aria-hidden="true">${s.ico}</span>
+        <span class="story-tag">${esc(s.tag)}</span>
+      </div>
+      <div class="story-body">
+        <h3 class="story-pull-name">${esc(s.name)}</h3>
+        <p class="story-pull-meta">${esc(s.meta)}</p>
+        <blockquote class="story-pull-quote">${esc(s.txt)}</blockquote>
+        ${s.wiki ? `<a href="${esc(s.wiki)}" target="_blank" rel="noopener noreferrer" class="story-link">Read on Wikipedia ↗</a>` : ''}
+      </div>
+    </article>`).join('');
+}
+
 function initStories() {
-  if (storiesInited) return;
-  storiesInited = true;
+  if (ALL_STORIES) { shuffleStories(); return; }
   const stories = [];
 
   // 1 — Youngest
   if (D.youngest) {
     const l=D.youngest;
-    stories.push({ico:'🌟',tag:'Youngest Winner',
+    const quote = l.motivation ? l.motivation.replace(/^"|"$/g,'') : `At just ${l.age} years old, one of the youngest Nobel laureates ever.`;
+    stories.push({ico:'🌟',cat:l.category,tag:'Youngest Winner',
       name:`${l.firstname} ${l.surname}`,
-      meta:`${CAT_LABEL[l.category]||l.category} · ${l.year} · Age ${l.age}`,
-      txt:`At just ${l.age} years old, ${l.firstname} ${l.surname} became one of the youngest people ever to receive a Nobel Prize${l.motivation?' — '+l.motivation.replace(/^"|"$/g,''):'.'} A true inspiration showing brilliance knows no age limit.`,
-      wiki:l.wiki_url});
+      meta:`${CAT_LABEL[l.category]||l.category} · ${l.year} · Age ${l.age} at award`,
+      txt:quote, wiki:l.wiki_url});
   }
 
   // 2 — Oldest
   if (D.oldest) {
     const l=D.oldest;
-    stories.push({ico:'🎖️',tag:'Oldest Winner',
+    const quote = l.motivation ? l.motivation.replace(/^"|"$/g,'') : `At the remarkable age of ${l.age}, proof that brilliance has no expiry date.`;
+    stories.push({ico:'🎖️',cat:l.category,tag:'Oldest Winner',
       name:`${l.firstname} ${l.surname}`,
-      meta:`${CAT_LABEL[l.category]||l.category} · ${l.year} · Age ${l.age}`,
-      txt:`At the remarkable age of ${l.age}, ${l.firstname} ${l.surname} proved that dedication and expertise can be recognised at any stage of life${l.motivation?' — '+l.motivation.replace(/^"|"$/g,''):'.'} `,
-      wiki:l.wiki_url});
+      meta:`${CAT_LABEL[l.category]||l.category} · ${l.year} · Age ${l.age} at award`,
+      txt:quote, wiki:l.wiki_url});
   }
 
-  // 3 — Multi-winners (up to 4)
+  // 3 — Multi-winners
   D.multiW.slice(0,4).forEach(group => {
     const l=group[0];
     const wins=group.map(g=>`${CAT_LABEL[g.category]||g.category} (${g.year})`).join(' and ');
-    stories.push({ico:'🏆',tag:'Double Nobel Laureate',
+    const quote = group.map(g => g.motivation ? g.motivation.replace(/^"|"$/g,'') : '').filter(Boolean)[0]
+      || `Won the Nobel Prize twice: ${wins}. Only a tiny handful of individuals have ever accomplished this.`;
+    stories.push({ico:'🏆',cat:l.category,tag:'Double Nobel Laureate',
       name:`${l.firstname} ${l.surname}`,
-      meta:`Won: ${group.map(g=>g.year).join(' & ')}`,
-      txt:`${l.firstname} ${l.surname} achieved the extraordinary distinction of winning the Nobel Prize twice: ${wins}. Only a tiny handful of individuals have ever accomplished this incredible feat.`,
-      wiki:l.wiki_url});
+      meta:`${wins}`,
+      txt:quote, wiki:l.wiki_url});
   });
 
   // 4 — First woman overall
   const fw = LAUREATES.filter(l=>l.gender==='female').sort((a,b)=>a.year-b.year)[0];
   if (fw) {
-    stories.push({ico:'👩‍🔬',tag:'First Woman Laureate',
+    const quote = fw.motivation ? fw.motivation.replace(/^"|"$/g,'') : `A trailblazer who opened doors for generations of women in science and scholarship worldwide.`;
+    stories.push({ico:'👩‍🔬',cat:fw.category,tag:'First Woman Laureate',
       name:`${fw.firstname} ${fw.surname}`,
       meta:`${CAT_LABEL[fw.category]||fw.category} · ${fw.year}`,
-      txt:`${fw.firstname} ${fw.surname} made history as one of the first women to receive a Nobel Prize, blazing a trail for generations of women scientists and scholars worldwide${fw.motivation?' — '+fw.motivation.replace(/^"|"$/g,''):'.'} `,
-      wiki:fw.wiki_url});
+      txt:quote, wiki:fw.wiki_url});
   }
 
   // 5 — First woman in each STEM category
-  ['physics','chemistry','medicine'].forEach(cat=>{
+  ['physics','chemistry','medicine','literature','peace'].forEach(cat=>{
     const fl=D.firstFemByCat[cat];
     if(!fl) return;
     const a=D.ageAt(fl);
-    stories.push({ico:CAT_EMOJI[cat],tag:`First Woman in ${CAT_LABEL[cat]}`,
+    const quote = fl.motivation ? fl.motivation.replace(/^"|"$/g,'') : `The first woman to win the Nobel Prize in ${CAT_LABEL[cat]}, breaking barriers in a field dominated by men.`;
+    stories.push({ico:CAT_EMOJI[cat],cat,tag:`First Woman in ${CAT_LABEL[cat]}`,
       name:`${fl.firstname} ${fl.surname}`,
-      meta:`${CAT_LABEL[cat]} · ${fl.year}${a?` · Age ${a}`:''}`,
-      txt:`${fl.firstname} ${fl.surname} broke barriers by becoming the first woman to win the Nobel Prize in ${CAT_LABEL[cat]}${fl.motivation?' — '+fl.motivation.replace(/^"|"$/g,''):'.'} Her achievement opened doors for women in science across the world.`,
-      wiki:fl.wiki_url});
+      meta:`${CAT_LABEL[cat]} · ${fl.year}${a?` · Age ${a} at award`:''}`,
+      txt:quote, wiki:fl.wiki_url});
   });
 
   // 6 — Top country
   if (D.topCnt) {
     const [c,n]=D.topCnt;
-    stories.push({ico:'🌎',tag:'Most Nobel Laureates',
-      name:`${c}`,
-      meta:`${n} Nobel Prize winners`,
-      txt:`${c} leads the world with ${n} Nobel Prize laureates — more than any other nation. This remarkable achievement reflects decades of sustained investment in education, research, and the arts.`,
+    stories.push({ico:'🌎',cat:'gold',tag:'Most Nobel Laureates',
+      name:c,
+      meta:`${n} Nobel Prize winners from one nation`,
+      txt:`More Nobel Prize laureates were born in ${c} than any other country — ${n} in total. This reflects decades of world-leading investment in education, research, and the arts.`,
       wiki:null});
   }
 
   // 7 — Organisation winners
   const orgWinners=LAUREATES.filter(l=>l.gender==='org');
   if (orgWinners.length>0) {
-    const firstOrg=orgWinners.sort((a,b)=>a.year-b.year)[0];
-    stories.push({ico:'🏢',tag:'Organisation Laureates',
+    const firstOrg=[...orgWinners].sort((a,b)=>a.year-b.year)[0];
+    stories.push({ico:'🏢',cat:'peace',tag:'Organisation Laureates',
       name:`${orgWinners.length} Organisations Honoured`,
       meta:`Peace Prize recipients across the decades`,
-      txt:`Not only individuals win Nobel Prizes — ${orgWinners.length} organisations have received the honour since ${firstOrg.year}, including international bodies whose collective efforts have advanced peace, health, and human rights worldwide.`,
+      txt:`Not only individuals receive Nobel Prizes — ${orgWinners.length} organisations have been honoured since ${firstOrg.year}, including bodies whose collective work has transformed global health, peace, and human rights.`,
       wiki:null});
   }
 
-  // 8 — Literature: median age
+  // 8 — Literature median age
   const litA=D.withAge.filter(l=>l.category==='literature').map(l=>l.age).sort((a,b)=>a-b);
   if (litA.length>0) {
     const med=litA[Math.floor(litA.length/2)];
-    const youngest_lit=D.withAge.filter(l=>l.category==='literature').sort((a,b)=>a.age-b.age)[0];
-    stories.push({ico:'📚',tag:'Nobel Literature Prize',
+    const yLit=D.withAge.filter(l=>l.category==='literature').sort((a,b)=>a.age-b.age)[0];
+    stories.push({ico:'📚',cat:'literature',tag:'Nobel Literature Prize',
       name:'The Prize in Literature',
       meta:`${litA.length} winners · Median age at prize: ${med}`,
-      txt:`The Nobel Prize in Literature has gone to ${litA.length} individuals with a median age of ${med}. The youngest person to win it was ${youngest_lit?.firstname} ${youngest_lit?.surname} at age ${youngest_lit?.age} in ${youngest_lit?.year} — literary greatness recognised at any age.`,
-      wiki:null});
+      txt:yLit?.motivation ? yLit.motivation.replace(/^"|"$/g,'') : `Writers often wait a lifetime for recognition — the literature prize has a median award age of ${med}, the highest of any category.`,
+      wiki:yLit?.wiki_url||null});
   }
 
-  // 9 — Economics (youngest prize)
+  // 9 — Economics (newest prize)
   const econFirst=LAUREATES.filter(l=>l.category==='economics').sort((a,b)=>a.year-b.year)[0];
   if (econFirst) {
-    stories.push({ico:'📊',tag:'The Newest Nobel Prize',
-      name:'Economics Prize — Added in 1969',
-      meta:`First winner: ${econFirst.firstname} ${econFirst.surname} (${econFirst.year})`,
-      txt:`The Nobel Prize in Economics is the newest, established in 1968 by Sveriges Riksbank and first awarded in ${econFirst.year} to ${econFirst.firstname} ${econFirst.surname}. It recognised the importance of economic science in improving our understanding of how societies allocate resources.`,
-      wiki:econFirst.wiki_url});
+    const quote = econFirst.motivation ? econFirst.motivation.replace(/^"|"$/g,'') : `First winner of the Nobel Prize in Economics, a prize established in 1968 by Sweden's central bank.`;
+    stories.push({ico:'📊',cat:'economics',tag:'The Newest Nobel Prize',
+      name:`${econFirst.firstname} ${econFirst.surname}`,
+      meta:`Economics · ${econFirst.year} · First ever winner`,
+      txt:quote, wiki:econFirst.wiki_url});
   }
 
-  // 10 — Most recent laureate
+  // 10 — Most recent person laureate
   const lastL=[...LAUREATES].filter(l=>l.gender!=='org').sort((a,b)=>b.year-a.year||a.category.localeCompare(b.category))[0];
   if (lastL) {
-    stories.push({ico:'✨',tag:'Among the Most Recent Winners',
+    const quote = lastL.motivation ? lastL.motivation.replace(/^"|"$/g,'') : `Among the most recent Nobel laureates (${lastL.year}).`;
+    stories.push({ico:'✨',cat:lastL.category,tag:`${lastL.year} Laureate`,
       name:`${lastL.firstname} ${lastL.surname}`,
       meta:`${CAT_LABEL[lastL.category]||lastL.category} · ${lastL.year}`,
-      txt:`${lastL.firstname} ${lastL.surname} is among the most recent Nobel laureates (${lastL.year})${lastL.motivation?' — '+lastL.motivation.replace(/^"|"$/g,''):''}.`,
-      wiki:lastL.wiki_url});
+      txt:quote, wiki:lastL.wiki_url});
   }
 
-  document.getElementById('storiesGrid').innerHTML = stories.slice(0,15).map(s=>`
-    <article class="story-card" tabindex="0">
-      <div class="story-top">
-        <span class="story-ico" aria-hidden="true">${s.ico}</span>
-        <span class="story-tag">${esc(s.tag)}</span>
-      </div>
-      <div class="story-body">
-        <h3 class="story-name">${esc(s.name)}</h3>
-        <p class="story-meta">${esc(s.meta)}</p>
-        <p class="story-txt">${esc(s.txt)}</p>
-        ${s.wiki?`<a href="${esc(s.wiki)}" target="_blank" rel="noopener noreferrer" class="story-link">Read more on Wikipedia ↗</a>`:''}
-      </div>
-    </article>`).join('');
+  // 11 — Random solo winners from different categories for colour variety
+  ['physics','chemistry','medicine','peace','economics'].forEach(cat => {
+    const sole=LAUREATES.filter(l=>l.category===cat&&l.share===1&&l.gender!=='org'&&l.motivation);
+    if (!sole.length) return;
+    const l=sole[Math.floor(sole.length*0.3)|0]; // pick a different one each build (deterministic)
+    const quote = l.motivation.replace(/^"|"$/g,'');
+    stories.push({ico:CAT_EMOJI[cat],cat,tag:`${CAT_LABEL[cat]} Prize`,
+      name:`${l.firstname} ${l.surname}`,
+      meta:`${CAT_LABEL[cat]} · ${l.year}`,
+      txt:quote, wiki:l.wiki_url});
+  });
+
+  ALL_STORIES = shuffle(stories);
+  shuffleStories();
 }
 
 // ════════════════════════════════════════════════════════
@@ -1054,8 +1222,20 @@ function initStories() {
 function startQuiz() {
   const qs = makeQuestions();
   state.quiz = {qs, cur:0, score:0, answered:false, selIdx:-1};
+  const bar = document.getElementById('quizScoreBar');
+  if (bar) { bar.style.display='flex'; updateScoreBar(); }
   renderQuizProg();
   renderQ();
+}
+
+function updateScoreBar() {
+  const {score, cur, answered} = state.quiz;
+  const answered_count = cur + (answered ? 1 : 0);
+  const el = document.getElementById('quizScoreVal');
+  if (!el) return;
+  const correct = score;
+  const wrong = answered_count - correct;
+  el.innerHTML = `<span class="qsb-correct">${correct} ✓</span> / <span class="qsb-wrong">${wrong} ✗</span> &nbsp;of&nbsp; ${answered_count}`;
 }
 
 function makeQuestions() {
@@ -1188,6 +1368,7 @@ function selAns(i) {
   if(q.opts[i]===q.ans) state.quiz.score++;
   state.quiz.answered=true;
   state.quiz.selIdx=i;
+  updateScoreBar();
   renderQ();
   renderQuizProg();
 }
@@ -1218,6 +1399,8 @@ function renderResult() {
       </div>
     </div>`;
   document.getElementById('quizProg').innerHTML='';
+  const bar=document.getElementById('quizScoreBar');
+  if(bar) bar.style.display='none';
 }
 
 // ════════════════════════════════════════════════════════
@@ -1231,6 +1414,19 @@ function shuffle(a) {
   const r=[...a];
   for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}
   return r;
+}
+// Count-up animation: animate el's textContent from 0 to target over ~1.2s
+function countUp(el, target, suffix='', duration=1200) {
+  if (!el || target == null || isNaN(target)) return;
+  const start = performance.now();
+  const step = ts => {
+    const p = Math.min((ts - start) / duration, 1);
+    // ease-out quad
+    const ease = 1 - (1-p)*(1-p);
+    el.textContent = Math.round(ease * target) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
 }
 
 // ════════════════════════════════════════════════════════
