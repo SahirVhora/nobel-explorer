@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nobel Prize Explorer</title>
+<style>
+/* ══════════════════════════════════════════════
+   CSS VARIABLES & THEMING
+══════════════════════════════════════════════ */
+:root {
+  --gold: #B8860B;
+  --gold-bright: #FFD700;
+  --gold-pale: #FFF8E1;
+  --gold-mid: #DAA520;
+  --bg: #F7F5F0;
+  --bg-card: #FFFFFF;
+  --bg-nav: #FFFFFF;
+  --text: #1A1A1A;
+  --text-muted: #6B6B6B;
+  --border: #E2DDD4;
+  --shadow: 0 2px 10px rgba(0,0,0,0.07);
+  --shadow-hover: 0 10px 30px rgba(0,0,0,0.14);
+  --radius: 14px;
+  --nav-h: 60px;
+  --physics: #3B82F6;
+  --chemistry: #059669;
+  --medicine: #DC2626;
+  --peace: #7C3AED;
+  --literature: #D97706;
+  --economics: #0891B2;
+  --ocean: #B8D4E8;
+  --continent: #C8B89A;
+}
+[data-theme="dark"] {
+  --bg: #111111;
+  --bg-card: #1C1C1C;
+  --bg-nav: #161616;
+  --text: #EFEFEF;
+  --text-muted: #999999;
+  --border: #2A2A2A;
+  --shadow: 0 2px 10px rgba(0,0,0,0.5);
+  --shadow-hover: 0 10px 30px rgba(0,0,0,0.7);
+  --gold-pale: #1E1500;
+  --ocean: #1A3A5A;
+  --continent: #3A2E1E;
+}
+/* ══════════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s;line-height:1.6;min-height:100vh;}
+h1,h2,h3,h4{font-weight:700;line-height:1.2;}
+button{cursor:pointer;border:none;background:none;font-family:inherit;font-size:inherit;}
+a{color:var(--gold);text-decoration:none;}
+a:hover{text-decoration:underline;}
+img{max-width:100%;height:auto;}
+/* ══════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════ */
+#nav{position:sticky;top:0;z-index:200;height:var(--nav-h);background:var(--bg-nav);border-bottom:2px solid var(--gold);display:flex;align-items:center;padding:0 20px;gap:12px;box-shadow:var(--shadow);}
+.nav-brand{font-size:1.15rem;font-weight:800;color:var(--gold);white-space:nowrap;flex-shrink:0;letter-spacing:-0.3px;}
+.nav-links{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-btn{padding:6px 13px;border-radius:20px;font-size:0.82rem;font-weight:500;color:var(--text-muted);transition:all .2s;white-space:nowrap;}
+.nav-btn:hover,.nav-btn.active{background:var(--gold-pale);color:var(--gold);}
+.nav-btn.active{font-weight:700;}
+#themeToggle{font-size:1.1rem;padding:7px;border-radius:50%;transition:transform .3s;flex-shrink:0;line-height:1;}
+#themeToggle:hover{transform:rotate(25deg);}
+.hamburger{font-size:1.4rem;padding:6px;line-height:1;flex-shrink:0;display:none;}
+/* ══════════════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════════════ */
+.section{display:none;min-height:calc(100vh - var(--nav-h));padding:40px 24px 72px;max-width:1200px;margin:0 auto;}
+.section.active{display:block;}
+.section-title{font-size:1.9rem;color:var(--gold);margin-bottom:6px;}
+.section-sub{color:var(--text-muted);margin-bottom:32px;font-size:.95rem;}
+/* ══════════════════════════════════════════════
+   HOME / HERO
+══════════════════════════════════════════════ */
+.hero{text-align:center;padding:64px 24px 56px;background:linear-gradient(135deg,var(--gold-pale) 0%,var(--bg) 100%);border-radius:var(--radius);margin-bottom:48px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(255,215,0,.12) 0%,transparent 65%);pointer-events:none;}
+.medal{font-size:84px;display:block;margin:0 auto 20px;animation:medalFloat 3.5s ease-in-out infinite;filter:drop-shadow(0 8px 20px rgba(184,134,11,.35));}
+@keyframes medalFloat{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-14px) rotate(6deg);}}
+.hero h1{font-size:clamp(1.9rem,5vw,3.2rem);background:linear-gradient(135deg,var(--gold),var(--gold-mid));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px;}
+.hero p{font-size:1.05rem;color:var(--text-muted);max-width:580px;margin:0 auto 32px;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-mid));color:#fff;padding:13px 30px;border-radius:28px;font-size:.95rem;font-weight:700;box-shadow:0 4px 16px rgba(184,134,11,.38);transition:all .3s;display:inline-block;border:none;cursor:pointer;font-family:inherit;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(184,134,11,.5);}
+.btn-secondary{background:transparent;color:var(--gold);padding:11px 26px;border-radius:28px;font-size:.9rem;font-weight:700;border:2px solid var(--gold);transition:all .3s;cursor:pointer;font-family:inherit;}
+.btn-secondary:hover{background:var(--gold-pale);transform:translateY(-2px);}
+/* Stats Grid */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:48px;}
+.stat-card{background:var(--bg-card);border-radius:var(--radius);padding:22px 20px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s;cursor:default;}
+.stat-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover);border-color:var(--gold-bright);}
+.stat-icon{font-size:1.9rem;display:block;margin-bottom:8px;}
+.stat-value{font-size:1.85rem;font-weight:800;color:var(--gold);display:block;line-height:1.1;}
+.stat-label{color:var(--text-muted);font-size:.8rem;margin-top:4px;display:block;}
+/* ══════════════════════════════════════════════
+   EXPLORER
+══════════════════════════════════════════════ */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;}
+.search-wrap{flex:1;min-width:200px;position:relative;}
+.search-wrap input{width:100%;padding:10px 16px 10px 40px;border-radius:24px;border:2px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.9rem;transition:border-color .2s;font-family:inherit;}
+.search-wrap input:focus{outline:none;border-color:var(--gold);}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
+.filt-sel{padding:9px 14px;border-radius:24px;border:2px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.82rem;cursor:pointer;transition:border-color .2s;font-family:inherit;}
+.filt-sel:focus{outline:none;border-color:var(--gold);}
+.results-info{color:var(--text-muted);font-size:.82rem;margin-bottom:14px;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;margin-bottom:28px;}
+/* Laureate Card */
+.l-card{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;transition:all .3s;display:flex;flex-direction:column;}
+.l-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:var(--gold-bright);}
+.card-hd{padding:14px 18px 10px;border-bottom:3px solid var(--border);display:flex;align-items:center;gap:11px;}
+.card-av{width:44px;height:44px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.card-nm{font-size:.95rem;font-weight:700;color:var(--text);}
+.card-yr{font-size:.75rem;color:var(--text-muted);}
+.card-bd{padding:10px 18px 14px;flex:1;}
+.cat-badge{display:inline-block;padding:3px 9px;border-radius:10px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px;color:#fff;}
+.card-country{font-size:.8rem;color:var(--text-muted);margin-bottom:6px;}
+.card-motiv{font-size:.78rem;color:var(--text-muted);font-style:italic;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.card-ft{padding:10px 18px;border-top:1px solid var(--border);}
+.wiki-link{font-size:.78rem;color:var(--gold);display:flex;align-items:center;gap:4px;}
+/* Category colors applied to card border-bottom */
+.c-physics .card-hd{border-bottom-color:var(--physics);}
+.c-chemistry .card-hd{border-bottom-color:var(--chemistry);}
+.c-medicine .card-hd{border-bottom-color:var(--medicine);}
+.c-peace .card-hd{border-bottom-color:var(--peace);}
+.c-literature .card-hd{border-bottom-color:var(--literature);}
+.c-economics .card-hd{border-bottom-color:var(--economics);}
+.bg-physics{background:var(--physics);}
+.bg-chemistry{background:var(--chemistry);}
+.bg-medicine{background:var(--medicine);}
+.bg-peace{background:var(--peace);}
+.bg-literature{background:var(--literature);}
+.bg-economics{background:var(--economics);}
+/* Pagination */
+.pagination{display:flex;justify-content:center;gap:6px;align-items:center;flex-wrap:wrap;}
+.pg-btn{padding:7px 14px;border-radius:18px;border:2px solid var(--border);background:var(--bg-card);color:var(--text);transition:all .2s;font-family:inherit;font-size:.82rem;}
+.pg-btn:hover,.pg-btn.on{background:var(--gold);border-color:var(--gold);color:#fff;}
+.pg-sep{color:var(--text-muted);font-size:.8rem;}
+/* Empty state */
+.empty{text-align:center;padding:60px 24px;color:var(--text-muted);grid-column:1/-1;}
+.empty-ico{font-size:3rem;display:block;margin-bottom:14px;}
+/* ══════════════════════════════════════════════
+   TIMELINE
+══════════════════════════════════════════════ */
+.tl-axis{height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-bright),var(--gold));border-radius:2px;margin-bottom:16px;}
+.tl-wrap{overflow-x:auto;cursor:grab;padding-bottom:12px;-webkit-overflow-scrolling:touch;}
+.tl-wrap:active{cursor:grabbing;}
+.tl-track{display:flex;gap:0;min-width:max-content;padding:0 4px;}
+.decade-blk{flex-shrink:0;width:175px;border-right:2px solid var(--border);padding:0 14px 0 0;cursor:pointer;transition:all .2s;}
+.decade-blk:last-child{border-right:none;}
+.decade-blk:hover .decade-lbl{color:var(--gold);}
+.decade-lbl{font-size:1.15rem;font-weight:800;color:var(--text-muted);padding:14px 0 10px;transition:color .2s;display:flex;align-items:center;gap:7px;}
+.decade-cnt{font-size:.65rem;background:var(--gold-pale);color:var(--gold);padding:2px 6px;border-radius:8px;font-weight:700;}
+.decade-items{display:flex;flex-direction:column;gap:3px;}
+.decade-item{font-size:.72rem;padding:4px 7px;border-radius:5px;background:var(--bg-card);border:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:158px;transition:all .2s;}
+.decade-item:hover{border-color:var(--gold-bright);background:var(--gold-pale);}
+/* ══════════════════════════════════════════════
+   MAP
+══════════════════════════════════════════════ */
+.map-wrap{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:32px;}
+#worldMap{width:100%;height:auto;display:block;}
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--border);align-items:center;font-size:.8rem;color:var(--text-muted);}
+.lg-item{display:flex;align-items:center;gap:5px;}
+.lg-dot{border-radius:50%;background:var(--gold);flex-shrink:0;}
+.country-bars{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px;margin-bottom:32px;}
+.cbar{background:var(--bg-card);border-radius:10px;padding:11px 15px;box-shadow:var(--shadow);border:1px solid var(--border);}
+.cbar-hd{font-size:.82rem;font-weight:700;margin-bottom:5px;display:flex;justify-content:space-between;}
+.cbar-count{color:var(--gold);font-weight:800;}
+.cbar-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.cbar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));border-radius:3px;}
+/* SVG map CSS overrides for dark mode */
+.ocean-bg{fill:var(--ocean);}
+.continent-shape{fill:var(--continent);stroke:#A09070;stroke-width:.8;}
+[data-theme="dark"] .continent-shape{stroke:#5A4A30;}
+.grid-line{stroke:rgba(255,255,255,.25);stroke-width:.5;}
+[data-theme="dark"] .grid-line{stroke:rgba(255,255,255,.12);}
+/* ══════════════════════════════════════════════
+   STORIES
+══════════════════════════════════════════════ */
+.stories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(305px,1fr));gap:22px;}
+.story-card{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;transition:all .3s;}
+.story-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);}
+.story-top{padding:18px 22px 10px;display:flex;align-items:center;gap:12px;}
+.story-ico{font-size:2.4rem;}
+.story-tag{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:10px;background:var(--gold-pale);color:var(--gold);}
+.story-body{padding:0 22px 22px;}
+.story-name{font-size:1.15rem;font-weight:800;margin-bottom:3px;}
+.story-meta{color:var(--text-muted);font-size:.8rem;margin-bottom:10px;}
+.story-txt{font-size:.87rem;line-height:1.65;color:var(--text-muted);}
+.story-link{display:inline-block;margin-top:10px;color:var(--gold);font-size:.82rem;font-weight:700;}
+/* ══════════════════════════════════════════════
+   QUIZ
+══════════════════════════════════════════════ */
+.quiz-box{max-width:620px;margin:0 auto;}
+.quiz-prog{display:flex;gap:7px;margin-bottom:30px;}
+.q-dot{flex:1;height:6px;border-radius:3px;background:var(--border);transition:background .3s;}
+.q-dot.done{background:var(--gold);}
+.q-dot.curr{background:var(--gold-bright);}
+.quiz-card{background:var(--bg-card);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:20px;}
+.q-num{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);font-weight:700;margin-bottom:10px;}
+.q-text{font-size:1.18rem;font-weight:700;line-height:1.45;margin-bottom:22px;}
+.q-opts{display:flex;flex-direction:column;gap:9px;}
+.q-opt{padding:13px 18px;border-radius:10px;border:2px solid var(--border);background:var(--bg-card);color:var(--text);text-align:left;font-size:.9rem;transition:all .2s;font-family:inherit;cursor:pointer;}
+.q-opt:hover:not(:disabled){border-color:var(--gold);background:var(--gold-pale);}
+.q-opt.correct{border-color:#10B981;background:#ECFDF5;color:#065F46;}
+.q-opt.wrong{border-color:#EF4444;background:#FEF2F2;color:#991B1B;}
+[data-theme="dark"] .q-opt.correct{background:#064E3B;color:#6EE7B7;border-color:#10B981;}
+[data-theme="dark"] .q-opt.wrong{background:#450A0A;color:#FCA5A5;border-color:#EF4444;}
+.q-explain{margin-top:14px;padding:12px 15px;border-radius:8px;font-size:.87rem;background:var(--gold-pale);color:var(--text-muted);border-left:3px solid var(--gold);}
+.quiz-result{text-align:center;padding:36px 20px;}
+.result-emoji{font-size:4.5rem;display:block;margin-bottom:12px;}
+.result-score{font-size:3.8rem;font-weight:800;color:var(--gold);margin:8px 0;}
+.result-msg{font-size:1.05rem;color:var(--text-muted);margin-bottom:26px;}
+.result-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+footer{background:var(--bg-card);border-top:1px solid var(--border);padding:22px 24px;text-align:center;color:var(--text-muted);font-size:.82rem;line-height:1.7;}
+footer a{color:var(--gold);}
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media(max-width:768px){
+  #nav{padding:0 14px;}
+  .nav-links{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--bg-nav);flex-direction:column;padding:12px;box-shadow:var(--shadow);border-bottom:2px solid var(--gold);z-index:199;}
+  .nav-links.open{display:flex;}
+  .nav-btn{text-align:left;padding:10px 14px;border-radius:8px;font-size:.92rem;}
+  .hamburger{display:block;}
+  .section{padding:24px 16px 60px;}
+  .hero{padding:44px 16px 40px;}
+  .medal{font-size:64px;}
+  .hero h1{font-size:1.7rem;}
+  .cards-grid{grid-template-columns:1fr;}
+  .stories-grid{grid-template-columns:1fr;}
+}
+@media(min-width:769px){.hamburger{display:none;}}
+/* Scrollbar */
+::-webkit-scrollbar{width:7px;height:7px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--gold);}
+/* Skip link */
+.skip-link{position:absolute;top:-50px;left:0;padding:8px 16px;background:var(--gold);color:#fff;border-radius:0 0 8px 0;z-index:300;transition:top .2s;font-size:.9rem;}
+.skip-link:focus{top:0;}
+/* Focus visible */
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+/* Random laureate modal overlay */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-box{background:var(--bg-card);border-radius:var(--radius);padding:32px;max-width:500px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;animation:modalIn .25s ease;}
+@keyframes modalIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+.modal-close{position:absolute;top:14px;right:16px;font-size:1.4rem;color:var(--text-muted);background:none;border:none;cursor:pointer;line-height:1;}
+.modal-cat{display:inline-block;padding:4px 11px;border-radius:10px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;margin-bottom:14px;}
+.modal-name{font-size:1.5rem;font-weight:800;margin-bottom:4px;}
+.modal-meta{color:var(--text-muted);font-size:.88rem;margin-bottom:14px;}
+.modal-motiv{font-size:.9rem;font-style:italic;color:var(--text-muted);line-height:1.65;margin-bottom:18px;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-brand">🏅 Nobel Explorer</div>
+  <div class="nav-links" id="navLinks" role="menubar">
+    <button class="nav-btn active" onclick="navigate('home')" data-sec="home" role="menuitem">Home</button>
+    <button class="nav-btn" onclick="navigate('explorer')" data-sec="explorer" role="menuitem">Explorer</button>
+    <button class="nav-btn" onclick="navigate('timeline')" data-sec="timeline" role="menuitem">Timeline</button>
+    <button class="nav-btn" onclick="navigate('map')" data-sec="map" role="menuitem">World Map</button>
+    <button class="nav-btn" onclick="navigate('stories')" data-sec="stories" role="menuitem">Stories</button>
+    <button class="nav-btn" onclick="navigate('quiz')" data-sec="quiz" role="menuitem">Quiz</button>
+  </div>
+  <button id="themeToggle" onclick="toggleTheme()" aria-label="Switch to dark mode" title="Toggle dark mode">🌙</button>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+</nav>
+
+<main id="main">
+<!-- ── HOME ── -->
+<section id="home" class="section active" aria-labelledby="home-h1">
+  <div class="hero">
+    <span class="medal" role="img" aria-label="Nobel Prize medal">🏅</span>
+    <h1 id="home-h1">Nobel Prize Explorer</h1>
+    <p>Discover the brilliant minds who changed our world — from 1901 to today. Search, explore, and be inspired!</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="discoverRandom()">✨ Random Laureate</button>
+      <button class="btn-secondary" onclick="navigate('explorer')">Browse All Winners</button>
+    </div>
+  </div>
+  <div id="homeStats" class="stats-grid" aria-label="Nobel Prize statistics"></div>
+  <h2 style="margin-bottom:16px;font-size:1.3rem;">Most Recent Prize Winners</h2>
+  <div id="recentCards" class="cards-grid"></div>
+</section>
+
+<!-- ── EXPLORER ── -->
+<section id="explorer" class="section" aria-labelledby="exp-h1">
+  <h1 class="section-title" id="exp-h1">Explore Laureates</h1>
+  <p class="section-sub">Search and filter all Nobel Prize winners from 1901 to the present</p>
+  <div class="filters" role="search" aria-label="Filter controls">
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input type="search" id="searchInput" placeholder="Search name, country, motivation…" oninput="applyFilters()" aria-label="Search laureates">
+    </div>
+    <select class="filt-sel" id="catFilter" onchange="applyFilters()" aria-label="Filter by category">
+      <option value="all">All Categories</option>
+      <option value="physics">Physics</option>
+      <option value="chemistry">Chemistry</option>
+      <option value="medicine">Medicine</option>
+      <option value="literature">Literature</option>
+      <option value="peace">Peace</option>
+      <option value="economics">Economics</option>
+    </select>
+    <select class="filt-sel" id="decFilter" onchange="applyFilters()" aria-label="Filter by decade"></select>
+    <select class="filt-sel" id="cntFilter" onchange="applyFilters()" aria-label="Filter by country"></select>
+    <select class="filt-sel" id="genFilter" onchange="applyFilters()" aria-label="Filter by gender">
+      <option value="all">All</option>
+      <option value="female">Women</option>
+      <option value="male">Men</option>
+      <option value="org">Organisations</option>
+    </select>
+  </div>
+  <div id="resultsInfo" class="results-info" aria-live="polite" aria-atomic="true"></div>
+  <div id="cardsGrid" class="cards-grid" role="list" aria-label="Laureate cards"></div>
+  <div id="pagination" class="pagination" role="navigation" aria-label="Page navigation"></div>
+</section>
+
+<!-- ── TIMELINE ── -->
+<section id="timeline" class="section" aria-labelledby="tl-h1">
+  <h1 class="section-title" id="tl-h1">Prize Timeline</h1>
+  <p class="section-sub">Scroll through Nobel history decade by decade — click any decade to explore those laureates</p>
+  <div class="tl-axis" aria-hidden="true"></div>
+  <div class="tl-wrap" id="tlWrap" tabindex="0" aria-label="Timeline — scroll horizontally to navigate">
+    <div class="tl-track" id="tlTrack"></div>
+  </div>
+</section>
+
+<!-- ── MAP ── -->
+<section id="map" class="section" aria-labelledby="map-h1">
+  <h1 class="section-title" id="map-h1">World Map</h1>
+  <p class="section-sub">Where Nobel laureates come from — bubble size represents laureate count. Click a bubble to explore that country.</p>
+  <div class="map-wrap">
+    <svg id="worldMap" class="map-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="World bubble map of Nobel laureates by birth country"></svg>
+    <div class="map-legend" aria-label="Map legend">
+      <strong>Bubble size = laureate count:</strong>
+      <div class="lg-item"><div class="lg-dot" style="width:8px;height:8px;"></div><span>1–5</span></div>
+      <div class="lg-item"><div class="lg-dot" style="width:14px;height:14px;"></div><span>6–20</span></div>
+      <div class="lg-item"><div class="lg-dot" style="width:22px;height:22px;"></div><span>21–60</span></div>
+      <div class="lg-item"><div class="lg-dot" style="width:30px;height:30px;"></div><span>60+</span></div>
+    </div>
+  </div>
+  <h2 style="margin-bottom:14px;font-size:1.2rem;">Top 20 Countries</h2>
+  <div id="cntBars" class="country-bars"></div>
+</section>
+
+<!-- ── STORIES ── -->
+<section id="stories" class="section" aria-labelledby="st-h1">
+  <h1 class="section-title" id="st-h1">Inspiring Stories</h1>
+  <p class="section-sub">Remarkable laureates and moments that made Nobel history</p>
+  <div id="storiesGrid" class="stories-grid"></div>
+</section>
+
+<!-- ── QUIZ ── -->
+<section id="quiz" class="section" aria-labelledby="qz-h1">
+  <h1 class="section-title" id="qz-h1">Nobel Quiz</h1>
+  <p class="section-sub">Test your knowledge with 5 random questions — every game is different!</p>
+  <div class="quiz-box">
+    <div id="quizProg" class="quiz-prog" role="progressbar" aria-label="Quiz progress"></div>
+    <div id="quizContent"></div>
+  </div>
+</section>
+</main>
+
+<!-- Random laureate modal -->
+<div id="modal" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-name">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>Data &copy; Nobel Prize Outreach AB &nbsp;·&nbsp; Wikipedia content under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></p>
+  <p style="margin-top:4px;">Built with pure HTML, CSS &amp; vanilla JavaScript · No frameworks, no build step</p>
+</footer>
+
+<script src="nobel_data.js"></script>
+<script>
+'use strict';
+
+// ════════════════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════════════════
+const PER_PAGE = 30;
+const CAT_LABEL = {physics:'Physics',chemistry:'Chemistry',medicine:'Medicine',peace:'Peace',literature:'Literature',economics:'Economics'};
+const CAT_EMOJI = {physics:'⚛️',chemistry:'🧪',medicine:'🔬',peace:'☮️',literature:'📚',economics:'📊'};
+
+// ════════════════════════════════════════════════════════
+// COUNTRY NORMALISATION
+// ════════════════════════════════════════════════════════
+const NORM_MAP = {
+  'Scotland':'United Kingdom','Northern Ireland':'United Kingdom','England':'United Kingdom','Great Britain':'United Kingdom',
+  'the Netherlands':'Netherlands','The Netherlands':'Netherlands',
+  'United States of America':'USA','United States':'USA',
+  'USSR':'Russia','Soviet Union':'Russia',
+  'Russian Empire':'Russia',
+  'Persia':'Iran',
+  'British India':'India',
+  'Faroe Islands (Denmark)':'Denmark',
+  'Guadeloupe France':'France',
+  'Germany (now France)':'Germany','Germany (now Poland)':'Germany','Germany (now Russia)':'Germany',
+  'Hungary (now Slovakia)':'Hungary',
+  'Bosnia (now Bosnia and Herzegovina)':'Bosnia and Herzegovina',
+  'Crete (now Greece)':'Greece',
+  'British West Indies (now Saint Lucia)':'Saint Lucia',
+  'Burma (now Myanmar)':'Myanmar',
+  'East Timor':'East Timor',
+  'Hong Kong':'China',
+  'Province of Quebec, Canada':'Canada','Province of Ontario, Canada':'Canada',
+};
+function normC(c) {
+  if (!c) return '';
+  if (NORM_MAP[c]) return NORM_MAP[c];
+  // Extract "(now X)" pattern
+  const m = c.match(/\(now ([^)]+)\)/);
+  if (m) return m[1];
+  return c;
+}
+
+// ════════════════════════════════════════════════════════
+// DATA PROCESSING (once at startup)
+// ════════════════════════════════════════════════════════
+const D = (() => {
+  const people = LAUREATES.filter(l => l.gender !== 'org');
+  const females = LAUREATES.filter(l => l.gender === 'female');
+  const orgs = LAUREATES.filter(l => l.gender === 'org');
+
+  function ageAt(l) {
+    if (!l.born || l.born === '0000-00-00') return null;
+    const by = parseInt(l.born);
+    if (!by || by < 1800) return null;
+    return l.year - by;
+  }
+
+  // Country counts (normalised)
+  const cntMap = {};
+  LAUREATES.forEach(l => {
+    const c = normC(l.bornCountry);
+    if (c) cntMap[c] = (cntMap[c] || 0) + 1;
+  });
+  const sortedCnts = Object.entries(cntMap).sort((a,b) => b[1]-a[1]);
+
+  // Unique birth countries
+  const uniqCnts = [...new Set(LAUREATES.map(l => normC(l.bornCountry)).filter(Boolean))].sort();
+
+  // Decades
+  const years = LAUREATES.map(l => l.year);
+  const minY = Math.min(...years), maxY = Math.max(...years);
+  const decades = [];
+  for (let d = Math.floor(minY/10)*10; d <= maxY; d += 10) decades.push(d);
+
+  // Age extremes
+  const withAge = people.map(l => ({...l, age: ageAt(l)})).filter(l => l.age && l.age > 5 && l.age < 100);
+  withAge.sort((a,b) => a.age - b.age);
+  const youngest = withAge[0];
+  withAge.sort((a,b) => b.age - a.age);
+  const oldest = withAge[0];
+
+  // Multi-winners
+  const byName = {};
+  people.forEach(l => {
+    const k = `${l.firstname}||${l.surname}`;
+    (byName[k] = byName[k] || []).push(l);
+  });
+  const multiW = Object.values(byName).filter(g => g.length > 1).sort((a,b) => b.length - a.length);
+
+  // First female per category
+  const firstFemByCat = {};
+  females.sort((a,b) => a.year - b.year).forEach(l => {
+    if (!firstFemByCat[l.category]) firstFemByCat[l.category] = l;
+  });
+
+  const recent = [...LAUREATES].sort((a,b) => b.year - a.year || a.category.localeCompare(b.category)).slice(0, 12);
+
+  return {
+    total: LAUREATES.length, people: people.length,
+    females: females.length, orgs: orgs.length,
+    femalePct: Math.round(females.length / (females.length + (LAUREATES.length - orgs.length - females.length)) * 100),
+    youngest, oldest, sortedCnts, cntMap, uniqCnts, decades, minY, maxY,
+    multiW, firstFemByCat, recent, withAge, ageAt,
+    topCnt: sortedCnts[0]
+  };
+})();
+
+// ════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════
+const state = {
+  section: 'home', dark: false, menuOpen: false,
+  exp: { page: 1, filtered: [] },
+  quiz: { qs: [], cur: 0, score: 0, answered: false, selIdx: -1 }
+};
+
+// ════════════════════════════════════════════════════════
+// ROUTING
+// ════════════════════════════════════════════════════════
+function navigate(sec) {
+  if (state.menuOpen) toggleMenu();
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(sec).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.sec === sec));
+  state.section = sec;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  if (sec === 'explorer') initExplorer();
+  if (sec === 'timeline') initTimeline();
+  if (sec === 'map') initMap();
+  if (sec === 'stories') initStories();
+  if (sec === 'quiz' && state.quiz.qs.length === 0) startQuiz();
+}
+
+// ════════════════════════════════════════════════════════
+// THEME & MENU
+// ════════════════════════════════════════════════════════
+function toggleTheme() {
+  state.dark = !state.dark;
+  document.documentElement.setAttribute('data-theme', state.dark ? 'dark' : 'light');
+  const btn = document.getElementById('themeToggle');
+  btn.textContent = state.dark ? '☀️' : '🌙';
+  btn.setAttribute('aria-label', state.dark ? 'Switch to light mode' : 'Switch to dark mode');
+}
+function toggleMenu() {
+  state.menuOpen = !state.menuOpen;
+  document.getElementById('navLinks').classList.toggle('open', state.menuOpen);
+  document.querySelector('.hamburger').setAttribute('aria-expanded', state.menuOpen);
+}
+
+// ════════════════════════════════════════════════════════
+// HOME
+// ════════════════════════════════════════════════════════
+function renderHome() {
+  const stats = [
+    {ico:'🏆', val: D.total, lbl:'Total Laureates'},
+    {ico:'🌍', val: D.sortedCnts.length, lbl:'Birth Countries'},
+    {ico:'👩‍🔬', val: `${D.females} (${D.femalePct}%)`, lbl:'Women Laureates'},
+    {ico:'🧒', val: D.youngest?.age ?? '—', lbl:`Youngest Winner${D.youngest ? ' · '+D.youngest.firstname+' '+D.youngest.surname : ''}`},
+    {ico:'👴', val: D.oldest?.age ?? '—', lbl:`Oldest Winner${D.oldest ? ' · '+D.oldest.firstname+' '+D.oldest.surname : ''}`},
+    {ico:'📅', val: `${D.minY}–${D.maxY}`, lbl:'Years of Prizes'},
+  ];
+  document.getElementById('homeStats').innerHTML = stats.map(s => `
+    <div class="stat-card" tabindex="0">
+      <span class="stat-icon" aria-hidden="true">${s.ico}</span>
+      <span class="stat-value">${s.val}</span>
+      <span class="stat-label">${esc(s.lbl)}</span>
+    </div>`).join('');
+
+  document.getElementById('recentCards').innerHTML = D.recent.map(l => buildCard(l)).join('');
+}
+
+function discoverRandom() {
+  const pool = LAUREATES.filter(l => l.gender !== 'org');
+  const l = pool[Math.floor(Math.random() * pool.length)];
+  showModal(l);
+}
+
+function showModal(l) {
+  const name = `${l.firstname} ${l.surname}`.trim();
+  const motiv = l.motivation ? l.motivation.replace(/^"|"$/g,'') : '';
+  const catLabel = CAT_LABEL[l.category] || l.category;
+  document.getElementById('modalBody').innerHTML = `
+    <span class="modal-cat bg-${l.category}">${catLabel}</span>
+    <h2 class="modal-name" id="modal-name">${esc(name)}</h2>
+    <p class="modal-meta">${esc(normC(l.bornCountry) || '')} ${l.bornCountry ? '·' : ''} Born ${l.born ? l.born.slice(0,4) : '?'} · Prize ${l.year}</p>
+    ${motiv ? `<p class="modal-motiv">${esc(motiv)}</p>` : ''}
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;">
+      ${l.wiki_url ? `<a href="${esc(l.wiki_url)}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="font-size:.85rem;padding:10px 20px;">Read on Wikipedia ↗</a>` : ''}
+      <button class="btn-secondary" style="font-size:.85rem;padding:8px 18px;" onclick="navigate('explorer');setTimeout(()=>{document.getElementById('searchInput').value='${esc(name.replace(/'/g,"\\\'"))}';applyFilters();},120);">Find in Explorer</button>
+    </div>`;
+  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('modal').focus();
+}
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ════════════════════════════════════════════════════════
+// EXPLORER
+// ════════════════════════════════════════════════════════
+let expInited = false;
+function initExplorer() {
+  if (expInited) return;
+  expInited = true;
+  const dd = document.getElementById('decFilter');
+  dd.innerHTML = '<option value="all">All Decades</option>';
+  D.decades.forEach(d => {
+    const o = document.createElement('option');
+    o.value = d; o.textContent = `${d}s`; dd.appendChild(o);
+  });
+  const cd = document.getElementById('cntFilter');
+  cd.innerHTML = '<option value="all">All Countries</option>';
+  D.uniqCnts.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c; cd.appendChild(o);
+  });
+  applyFilters();
+}
+
+function applyFilters() {
+  const search = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
+  const cat = document.getElementById('catFilter')?.value || 'all';
+  const dec = document.getElementById('decFilter')?.value || 'all';
+  const cnt = document.getElementById('cntFilter')?.value || 'all';
+  const gen = document.getElementById('genFilter')?.value || 'all';
+
+  const filtered = LAUREATES.filter(l => {
+    if (cat !== 'all' && l.category !== cat) return false;
+    if (dec !== 'all' && Math.floor(l.year/10)*10 !== +dec) return false;
+    if (gen !== 'all' && l.gender !== gen) return false;
+    if (cnt !== 'all' && normC(l.bornCountry) !== cnt) return false;
+    if (search) {
+      const txt = `${l.firstname} ${l.surname} ${l.bornCountry} ${l.motivation} ${l.category} ${l.year}`.toLowerCase();
+      if (!txt.includes(search)) return false;
+    }
+    return true;
+  });
+
+  state.exp.filtered = filtered;
+  state.exp.page = 1;
+  renderCards();
+}
+
+function renderCards() {
+  const {filtered, page} = state.exp;
+  const total = filtered.length;
+  const totalPgs = Math.ceil(total / PER_PAGE) || 1;
+  const start = (page-1)*PER_PAGE;
+  const slice = filtered.slice(start, start+PER_PAGE);
+
+  document.getElementById('resultsInfo').textContent =
+    `Showing ${total === 0 ? 0 : start+1}–${Math.min(start+PER_PAGE, total)} of ${total} laureates`;
+
+  const grid = document.getElementById('cardsGrid');
+  if (slice.length === 0) {
+    grid.innerHTML = `<div class="empty"><span class="empty-ico">🔍</span><p>No laureates match your search. Try adjusting the filters.</p></div>`;
+  } else {
+    grid.innerHTML = slice.map(l => `<div role="listitem">${buildCard(l)}</div>`).join('');
+  }
+
+  const pag = document.getElementById('pagination');
+  if (totalPgs <= 1) { pag.innerHTML = ''; return; }
+  let html = '';
+  if (page > 1) html += `<button class="pg-btn" onclick="goPage(${page-1})" aria-label="Previous page">‹ Prev</button>`;
+  const range = smartRange(page, totalPgs);
+  range.forEach(p => {
+    if (p === '…') html += `<span class="pg-sep">…</span>`;
+    else html += `<button class="pg-btn${p===page?' on':''}" onclick="goPage(${p})" aria-label="Page ${p}"${p===page?' aria-current="page"':''}>${p}</button>`;
+  });
+  if (page < totalPgs) html += `<button class="pg-btn" onclick="goPage(${page+1})" aria-label="Next page">Next ›</button>`;
+  pag.innerHTML = html;
+}
+function smartRange(cur, tot) {
+  if (tot <= 7) return Array.from({length:tot},(_,i)=>i+1);
+  const r = [1];
+  if (cur > 3) r.push('…');
+  for (let i=Math.max(2,cur-1);i<=Math.min(tot-1,cur+1);i++) r.push(i);
+  if (cur < tot-2) r.push('…');
+  r.push(tot);
+  return r;
+}
+function goPage(p) {
+  state.exp.page = p;
+  renderCards();
+  document.getElementById('explorer').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ════════════════════════════════════════════════════════
+// CARD BUILDER
+// ════════════════════════════════════════════════════════
+function buildCard(l) {
+  const name = `${l.firstname} ${l.surname}`.trim();
+  const cat = l.category;
+  const catLbl = CAT_LABEL[cat] || cat;
+  const country = normC(l.bornCountry);
+  const motiv = l.motivation ? l.motivation.replace(/^"|"$/g,'') : '';
+  const gIco = l.gender==='org' ? '🏢' : l.gender==='female' ? '👩' : '👨';
+  const ageStr = (() => {
+    const a = D.ageAt(l);
+    return a ? ` · Age ${a}` : '';
+  })();
+  return `<article class="l-card c-${cat}" tabindex="0" aria-label="${esc(name)}, ${catLbl} ${l.year}">
+  <div class="card-hd">
+    <div class="card-av" aria-hidden="true">${CAT_EMOJI[cat]||'🏅'}</div>
+    <div><div class="card-nm">${esc(name)}</div><div class="card-yr">${l.year}${ageStr} ${gIco}</div></div>
+  </div>
+  <div class="card-bd">
+    <span class="cat-badge bg-${cat}">${catLbl}</span>
+    ${country ? `<div class="card-country">📍 ${esc(country)}</div>` : ''}
+    ${motiv ? `<div class="card-motiv">${esc(motiv)}</div>` : ''}
+  </div>
+  ${l.wiki_url ? `<div class="card-ft"><a href="${esc(l.wiki_url)}" target="_blank" rel="noopener noreferrer" class="wiki-link" aria-label="Wikipedia: ${esc(name)}">📖 Wikipedia ↗</a></div>` : ''}
+</article>`;
+}
+
+// ════════════════════════════════════════════════════════
+// TIMELINE
+// ════════════════════════════════════════════════════════
+let tlInited = false;
+function initTimeline() {
+  if (tlInited) return;
+  tlInited = true;
+  const track = document.getElementById('tlTrack');
+
+  D.decades.forEach(decade => {
+    const group = LAUREATES.filter(l => Math.floor(l.year/10)*10 === decade);
+    // Pick one unique laureate per category (non-org, sort by year)
+    const shown = [];
+    const seen = new Set();
+    group.filter(l=>l.gender!=='org').sort((a,b)=>a.year-b.year).forEach(l => {
+      if (!seen.has(l.category)) { seen.add(l.category); shown.push(l); }
+    });
+    // Also add some notable ones beyond categories
+    group.filter(l=>l.gender!=='org').sort((a,b)=>a.year-b.year)
+      .filter(l => !shown.includes(l))
+      .slice(0, Math.max(0, 7 - shown.length))
+      .forEach(l => shown.push(l));
+
+    const blk = document.createElement('div');
+    blk.className = 'decade-blk';
+    blk.setAttribute('tabindex','0');
+    blk.setAttribute('role','button');
+    blk.setAttribute('aria-label',`${decade}s — ${group.length} laureates. Press Enter to explore.`);
+    blk.innerHTML = `
+      <div class="decade-lbl">${decade}s <span class="decade-cnt">${group.length}</span></div>
+      <div class="decade-items">${shown.slice(0,7).map(l=>`
+        <div class="decade-item" title="${esc(l.firstname+' '+l.surname+' — '+CAT_LABEL[l.category]+' '+l.year)}">
+          ${CAT_EMOJI[l.category]||'🏅'} ${esc(l.firstname)} ${esc(l.surname)}
+        </div>`).join('')}
+      </div>`;
+    blk.onclick = () => {
+      navigate('explorer');
+      setTimeout(() => {
+        document.getElementById('decFilter').value = decade;
+        applyFilters();
+      }, 120);
+    };
+    blk.onkeydown = e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();blk.click();} };
+    track.appendChild(blk);
+  });
+
+  // Drag scroll
+  const wrap = document.getElementById('tlWrap');
+  let down=false, startX=0, sl=0;
+  wrap.addEventListener('mousedown', e=>{down=true;startX=e.pageX-wrap.offsetLeft;sl=wrap.scrollLeft;});
+  wrap.addEventListener('mouseleave',()=>{down=false;});
+  wrap.addEventListener('mouseup',()=>{down=false;});
+  wrap.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();wrap.scrollLeft=sl-(e.pageX-wrap.offsetLeft-startX);});
+}
+
+// ════════════════════════════════════════════════════════
+// WORLD MAP
+// ════════════════════════════════════════════════════════
+// Approximate [lat, lon] for normalised country names
+const COORDS = {
+  'USA':[38,-97],'United Kingdom':[54,-2],'Germany':[51,10],'France':[46,2],
+  'Sweden':[60,18],'Japan':[36,138],'Canada':[58,-96],'Netherlands':[52,5],
+  'Switzerland':[47,8],'Russia':[60,90],'Italy':[42,12],'Austria':[47,14],
+  'Norway':[64,26],'Denmark':[56,10],'China':[35,105],'Australia':[-27,133],
+  'Belgium':[50,4],'India':[20,78],'Poland':[52,20],'Hungary':[47,19],
+  'Argentina':[-34,-64],'South Africa':[-29,25],'Israel':[31,35],
+  'Ireland':[53,-8],'Spain':[40,-4],'Czech Republic':[50,15],
+  'Finland':[61,26],'New Zealand':[-41,174],'Brazil':[-15,-47],
+  'Pakistan':[30,70],'Bangladesh':[24,90],'Myanmar':[16,96],
+  'Kenya':[-1,37],'Nigeria':[10,8],'Egypt':[26,30],'Mexico':[23,-102],
+  'Colombia':[4,-74],'Chile':[-30,-71],'Guatemala':[15,-90],'Iran':[32,53],
+  'Iraq':[33,44],'Turkey':[39,35],'Portugal':[39,-8],'Romania':[46,25],
+  'Bulgaria':[43,25],'Lithuania':[55,24],'Latvia':[57,25],'Estonia':[59,25],
+  'Ukraine':[49,32],'Belarus':[53,28],'Slovakia':[48,19],'Croatia':[45,16],
+  'Slovenia':[46,15],'Serbia':[44,21],'Greece':[39,22],
+  'Bosnia and Herzegovina':[44,17],'Moldova':[47,29],
+  'Algeria':[28,3],'Morocco':[32,-5],'Ghana':[8,-2],'Ethiopia':[8,38],
+  'Tanzania':[-6,35],'Zimbabwe':[-20,30],'Uganda':[1,32],
+  'DR Congo':[-4,23],'Senegal':[14,-14],'Tunisia':[34,9],
+  'Indonesia':[-5,117],'Philippines':[12,122],'Vietnam':[16,108],
+  'Thailand':[15,101],'Malaysia':[2,112],'Singapore':[1,104],
+  'Nepal':[28,84],'Sri Lanka':[8,81],'Afghanistan':[34,65],
+  'Saudi Arabia':[25,45],'Yemen':[15,48],'Syria':[35,38],
+  'Lebanon':[33,35],'Jordan':[30,36],'Azerbaijan':[40,48],'Georgia':[41,44],
+  'Iceland':[65,-18],'Cyprus':[35,33],'Luxembourg':[50,6],'Malta':[36,14],
+  'Peru':[-10,-76],'Venezuela':[6,-66],'Ecuador':[-2,-78],
+  'Cuba':[22,-80],'Costa Rica':[10,-84],'Panama':[9,-80],
+  'Trinidad and Tobago':[10,-61],'Saint Lucia':[14,-61],
+  'South Korea':[37,128],'Taiwan':[23,121],
+  'East Timor':[-9,126],'Libya':[27,17],'Sudan':[16,32],
+  'Malawi':[-13,34],'Cameroon':[6,12],'Guinea':[11,-12],
+};
+
+function ll2xy(lat, lon, W, H) {
+  return [(lon+180)/360*W, (90-lat)/180*H];
+}
+
+let mapInited = false;
+function initMap() {
+  if (mapInited) return;
+  mapInited = true;
+  const W=1000, H=500;
+  const svg = document.getElementById('worldMap');
+  const ns = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs, cls) => {
+    const el = document.createElementNS(ns, tag);
+    if (cls) el.setAttribute('class', cls);
+    Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
+    return el;
+  };
+
+  // Ocean background
+  svg.appendChild(mk('rect',{width:W,height:H},'ocean-bg'));
+
+  // Simplified continent polygons (equirectangular projection)
+  const continents = [
+    // North America
+    'M33,69 L70,44 L250,42 L322,78 L353,119 L278,181 L264,208 L244,222 L194,194 L156,125 L56,97 Z',
+    // South America
+    'M264,208 L300,217 L328,231 L403,261 L381,319 L311,403 L292,375 L278,283 L283,250 L286,228 Z',
+    // Europe (main)
+    'M578,44 L610,78 L639,83 L611,128 L572,147 L569,150 L542,144 L520,142 L483,150 L478,142 L486,111 L514,89 L536,64 Z',
+    // Iceland
+    'M450,64 L470,58 L478,70 L466,78 L449,74 Z',
+    // UK
+    'M466,78 L478,72 L484,83 L475,94 L463,91 Z',
+    // Africa
+    'M483,147 L528,147 L528,150 L597,167 L636,228 L612,261 L594,322 L572,344 L546,333 L533,300 L497,236 L453,208 L472,178 L483,153 Z',
+    // Asia (main)
+    'M583,44 L778,36 L972,69 L944,97 L889,139 L855,142 L822,189 L789,247 L780,236 L750,228 L717,228 L689,183 L639,208 L617,144 L611,128 L639,83 Z',
+    // Japan (simplified)
+    'M855,110 L869,105 L878,122 L869,139 L853,134 Z',
+    // South East Asia peninsula
+    'M770,240 L789,247 L783,270 L764,278 L752,262 Z',
+    // Australia
+    'M839,297 L878,286 L905,292 L910,356 L889,356 L819,342 L817,311 Z',
+    // New Zealand
+    'M911,367 L920,361 L926,377 L920,392 L908,390 Z',
+    // Greenland
+    'M303,22 L355,18 L375,44 L352,62 L297,55 Z',
+  ];
+  continents.forEach(d => svg.appendChild(mk('path',{d},'continent-shape')));
+
+  // Grid lines
+  for (let lat=-60;lat<=60;lat+=30) {
+    const [x1,y1]=ll2xy(lat,-180,W,H), [x2,y2]=ll2xy(lat,180,W,H);
+    svg.appendChild(mk('line',{x1,y1,x2,y2},'grid-line'));
+  }
+  for (let lon=-150;lon<=150;lon+=60) {
+    const [x1,y1]=ll2xy(90,lon,W,H), [x2,y2]=ll2xy(-90,lon,W,H);
+    svg.appendChild(mk('line',{x1,y1,x2,y2},'grid-line'));
+  }
+
+  // Equator label
+  const [ex,ey]=ll2xy(0,-172,W,H);
+  const eqLbl=mk('text',{x:ex+2,y:ey-3,'font-size':'8','fill':'rgba(255,255,255,.5)','pointer-events':'none'},'');
+  eqLbl.textContent='Equator';
+  svg.appendChild(eqLbl);
+
+  // Country bubbles
+  const max = D.sortedCnts[0][1];
+  D.sortedCnts.forEach(([country, count]) => {
+    const coord = COORDS[country];
+    if (!coord) return;
+    const [cx,cy] = ll2xy(coord[0], coord[1], W, H);
+    const r = Math.max(4, Math.min(36, 4 + Math.sqrt(count/max)*32));
+    const opacity = 0.55 + (count/max)*0.45;
+
+    const g = document.createElementNS(ns,'g');
+    g.style.cursor='pointer';
+
+    const circle = mk('circle',{cx,cy,r,fill:`rgba(184,134,11,${opacity.toFixed(2)})`,stroke:'#FFD700','stroke-width':'1.5'},'');
+    const title = document.createElementNS(ns,'title');
+    title.textContent = `${country}: ${count} laureate${count!==1?'s':''}`;
+    circle.appendChild(title);
+
+    g.appendChild(circle);
+
+    // Label for top 12 countries
+    const rank = D.sortedCnts.findIndex(([c])=>c===country);
+    if (rank < 12) {
+      const shortName = country==='United Kingdom'?'UK':country==='Netherlands'?'NL':country==='Switzerland'?'CH':country==='Australia'?'AUS':country.length>9?country.slice(0,8)+'…':country;
+      const txt = mk('text',{x:cx,y:cy+r+11,'text-anchor':'middle','font-size':'8.5','font-weight':'700','fill':'#333','pointer-events':'none'},'');
+      txt.textContent=shortName;
+      g.appendChild(txt);
+    }
+
+    g.addEventListener('mouseenter',()=>{circle.setAttribute('fill','#FFD700');circle.setAttribute('r',r+3);});
+    g.addEventListener('mouseleave',()=>{circle.setAttribute('fill',`rgba(184,134,11,${opacity.toFixed(2)})`);circle.setAttribute('r',r);});
+    g.addEventListener('click',()=>{
+      navigate('explorer');
+      setTimeout(()=>{
+        const sel = document.getElementById('cntFilter');
+        // Find matching option
+        const opt = [...sel.options].find(o=>o.value===country);
+        if(opt) sel.value=country; else sel.value='all';
+        applyFilters();
+      },120);
+    });
+    svg.appendChild(g);
+  });
+
+  // Country bars (top 20)
+  const bars = document.getElementById('cntBars');
+  const maxCnt = D.sortedCnts[0][1];
+  bars.innerHTML = D.sortedCnts.slice(0,20).map(([c,n])=>`
+    <div class="cbar">
+      <div class="cbar-hd"><span>${esc(c)}</span><span class="cbar-count">${n}</span></div>
+      <div class="cbar-track"><div class="cbar-fill" style="width:${(n/maxCnt*100).toFixed(1)}%" role="progressbar" aria-valuenow="${n}" aria-valuemax="${maxCnt}" aria-label="${esc(c)}: ${n}"></div></div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════
+// INSPIRING STORIES
+// ════════════════════════════════════════════════════════
+let storiesInited = false;
+function initStories() {
+  if (storiesInited) return;
+  storiesInited = true;
+  const stories = [];
+
+  // 1 — Youngest
+  if (D.youngest) {
+    const l=D.youngest;
+    stories.push({ico:'🌟',tag:'Youngest Winner',
+      name:`${l.firstname} ${l.surname}`,
+      meta:`${CAT_LABEL[l.category]||l.category} · ${l.year} · Age ${l.age}`,
+      txt:`At just ${l.age} years old, ${l.firstname} ${l.surname} became one of the youngest people ever to receive a Nobel Prize${l.motivation?' — '+l.motivation.replace(/^"|"$/g,''):'.'} A true inspiration showing brilliance knows no age limit.`,
+      wiki:l.wiki_url});
+  }
+
+  // 2 — Oldest
+  if (D.oldest) {
+    const l=D.oldest;
+    stories.push({ico:'🎖️',tag:'Oldest Winner',
+      name:`${l.firstname} ${l.surname}`,
+      meta:`${CAT_LABEL[l.category]||l.category} · ${l.year} · Age ${l.age}`,
+      txt:`At the remarkable age of ${l.age}, ${l.firstname} ${l.surname} proved that dedication and expertise can be recognised at any stage of life${l.motivation?' — '+l.motivation.replace(/^"|"$/g,''):'.'} `,
+      wiki:l.wiki_url});
+  }
+
+  // 3 — Multi-winners (up to 4)
+  D.multiW.slice(0,4).forEach(group => {
+    const l=group[0];
+    const wins=group.map(g=>`${CAT_LABEL[g.category]||g.category} (${g.year})`).join(' and ');
+    stories.push({ico:'🏆',tag:'Double Nobel Laureate',
+      name:`${l.firstname} ${l.surname}`,
+      meta:`Won: ${group.map(g=>g.year).join(' & ')}`,
+      txt:`${l.firstname} ${l.surname} achieved the extraordinary distinction of winning the Nobel Prize twice: ${wins}. Only a tiny handful of individuals have ever accomplished this incredible feat.`,
+      wiki:l.wiki_url});
+  });
+
+  // 4 — First woman overall
+  const fw = LAUREATES.filter(l=>l.gender==='female').sort((a,b)=>a.year-b.year)[0];
+  if (fw) {
+    stories.push({ico:'👩‍🔬',tag:'First Woman Laureate',
+      name:`${fw.firstname} ${fw.surname}`,
+      meta:`${CAT_LABEL[fw.category]||fw.category} · ${fw.year}`,
+      txt:`${fw.firstname} ${fw.surname} made history as one of the first women to receive a Nobel Prize, blazing a trail for generations of women scientists and scholars worldwide${fw.motivation?' — '+fw.motivation.replace(/^"|"$/g,''):'.'} `,
+      wiki:fw.wiki_url});
+  }
+
+  // 5 — First woman in each STEM category
+  ['physics','chemistry','medicine'].forEach(cat=>{
+    const fl=D.firstFemByCat[cat];
+    if(!fl) return;
+    const a=D.ageAt(fl);
+    stories.push({ico:CAT_EMOJI[cat],tag:`First Woman in ${CAT_LABEL[cat]}`,
+      name:`${fl.firstname} ${fl.surname}`,
+      meta:`${CAT_LABEL[cat]} · ${fl.year}${a?` · Age ${a}`:''}`,
+      txt:`${fl.firstname} ${fl.surname} broke barriers by becoming the first woman to win the Nobel Prize in ${CAT_LABEL[cat]}${fl.motivation?' — '+fl.motivation.replace(/^"|"$/g,''):'.'} Her achievement opened doors for women in science across the world.`,
+      wiki:fl.wiki_url});
+  });
+
+  // 6 — Top country
+  if (D.topCnt) {
+    const [c,n]=D.topCnt;
+    stories.push({ico:'🌎',tag:'Most Nobel Laureates',
+      name:`${c}`,
+      meta:`${n} Nobel Prize winners`,
+      txt:`${c} leads the world with ${n} Nobel Prize laureates — more than any other nation. This remarkable achievement reflects decades of sustained investment in education, research, and the arts.`,
+      wiki:null});
+  }
+
+  // 7 — Organisation winners
+  const orgWinners=LAUREATES.filter(l=>l.gender==='org');
+  if (orgWinners.length>0) {
+    const firstOrg=orgWinners.sort((a,b)=>a.year-b.year)[0];
+    stories.push({ico:'🏢',tag:'Organisation Laureates',
+      name:`${orgWinners.length} Organisations Honoured`,
+      meta:`Peace Prize recipients across the decades`,
+      txt:`Not only individuals win Nobel Prizes — ${orgWinners.length} organisations have received the honour since ${firstOrg.year}, including international bodies whose collective efforts have advanced peace, health, and human rights worldwide.`,
+      wiki:null});
+  }
+
+  // 8 — Literature: median age
+  const litA=D.withAge.filter(l=>l.category==='literature').map(l=>l.age).sort((a,b)=>a-b);
+  if (litA.length>0) {
+    const med=litA[Math.floor(litA.length/2)];
+    const youngest_lit=D.withAge.filter(l=>l.category==='literature').sort((a,b)=>a.age-b.age)[0];
+    stories.push({ico:'📚',tag:'Nobel Literature Prize',
+      name:'The Prize in Literature',
+      meta:`${litA.length} winners · Median age at prize: ${med}`,
+      txt:`The Nobel Prize in Literature has gone to ${litA.length} individuals with a median age of ${med}. The youngest person to win it was ${youngest_lit?.firstname} ${youngest_lit?.surname} at age ${youngest_lit?.age} in ${youngest_lit?.year} — literary greatness recognised at any age.`,
+      wiki:null});
+  }
+
+  // 9 — Economics (youngest prize)
+  const econFirst=LAUREATES.filter(l=>l.category==='economics').sort((a,b)=>a.year-b.year)[0];
+  if (econFirst) {
+    stories.push({ico:'📊',tag:'The Newest Nobel Prize',
+      name:'Economics Prize — Added in 1969',
+      meta:`First winner: ${econFirst.firstname} ${econFirst.surname} (${econFirst.year})`,
+      txt:`The Nobel Prize in Economics is the newest, established in 1968 by Sveriges Riksbank and first awarded in ${econFirst.year} to ${econFirst.firstname} ${econFirst.surname}. It recognised the importance of economic science in improving our understanding of how societies allocate resources.`,
+      wiki:econFirst.wiki_url});
+  }
+
+  // 10 — Most recent laureate
+  const lastL=[...LAUREATES].filter(l=>l.gender!=='org').sort((a,b)=>b.year-a.year||a.category.localeCompare(b.category))[0];
+  if (lastL) {
+    stories.push({ico:'✨',tag:'Among the Most Recent Winners',
+      name:`${lastL.firstname} ${lastL.surname}`,
+      meta:`${CAT_LABEL[lastL.category]||lastL.category} · ${lastL.year}`,
+      txt:`${lastL.firstname} ${lastL.surname} is among the most recent Nobel laureates (${lastL.year})${lastL.motivation?' — '+lastL.motivation.replace(/^"|"$/g,''):''}.`,
+      wiki:lastL.wiki_url});
+  }
+
+  document.getElementById('storiesGrid').innerHTML = stories.slice(0,15).map(s=>`
+    <article class="story-card" tabindex="0">
+      <div class="story-top">
+        <span class="story-ico" aria-hidden="true">${s.ico}</span>
+        <span class="story-tag">${esc(s.tag)}</span>
+      </div>
+      <div class="story-body">
+        <h3 class="story-name">${esc(s.name)}</h3>
+        <p class="story-meta">${esc(s.meta)}</p>
+        <p class="story-txt">${esc(s.txt)}</p>
+        ${s.wiki?`<a href="${esc(s.wiki)}" target="_blank" rel="noopener noreferrer" class="story-link">Read more on Wikipedia ↗</a>`:''}
+      </div>
+    </article>`).join('');
+}
+
+// ════════════════════════════════════════════════════════
+// QUIZ
+// ════════════════════════════════════════════════════════
+function startQuiz() {
+  const qs = makeQuestions();
+  state.quiz = {qs, cur:0, score:0, answered:false, selIdx:-1};
+  renderQuizProg();
+  renderQ();
+}
+
+function makeQuestions() {
+  const pool = [];
+
+  // Q-type A: Who won [category] in [year]? (sole winner)
+  const sole = LAUREATES.filter(l=>l.gender!=='org'&&l.share===1);
+  for (let i=0;i<2;i++) {
+    const q = randEl(sole);
+    const wrong = sole.filter(l=>l.category===q.category&&!(l.firstname===q.firstname&&l.year===q.year))
+      .sort(()=>Math.random()-.5).slice(0,3).map(l=>`${l.firstname} ${l.surname}`);
+    if (wrong.length<3) {
+      LAUREATES.filter(l=>l.gender!=='org'&&l.firstname!==q.firstname)
+        .sort(()=>Math.random()-.5).slice(0,3-wrong.length).forEach(l=>wrong.push(`${l.firstname} ${l.surname}`));
+    }
+    const correct=`${q.firstname} ${q.surname}`;
+    pool.push({
+      q:`Who won the Nobel Prize in ${CAT_LABEL[q.category]||q.category} in ${q.year}?`,
+      opts:shuffle([correct,...wrong.slice(0,3)]),
+      ans:correct,
+      exp:`${correct} won the ${CAT_LABEL[q.category]} Prize in ${q.year}${q.motivation?' for '+q.motivation.replace(/^"|"$/g,''):'.'}`,
+    });
+  }
+
+  // Q-type B: Which year did [name] win?
+  const ppl=LAUREATES.filter(l=>l.gender!=='org');
+  const qb=randEl(ppl);
+  const allYears=[...new Set(ppl.map(l=>l.year))];
+  const wrongYears=shuffle(allYears.filter(y=>y!==qb.year)).slice(0,3).map(String);
+  pool.push({
+    q:`In which year did ${qb.firstname} ${qb.surname} win the Nobel Prize in ${CAT_LABEL[qb.category]||qb.category}?`,
+    opts:shuffle([String(qb.year),...wrongYears]),
+    ans:String(qb.year),
+    exp:`${qb.firstname} ${qb.surname} received the Nobel ${CAT_LABEL[qb.category]} Prize in ${qb.year}.`,
+  });
+
+  // Q-type C: Which country has the most laureates?
+  const top4=D.sortedCnts.slice(0,4).map(([c])=>c);
+  pool.push({
+    q:'Which country has produced the most Nobel Prize laureates (by birth country)?',
+    opts:shuffle(top4),
+    ans:top4[0],
+    exp:`${top4[0]} leads with ${D.sortedCnts[0][1]} laureates, followed by ${top4[1]} (${D.sortedCnts[1][1]}).`,
+  });
+
+  // Q-type D: How many women?
+  const fw=D.females;
+  const wOpts=shuffle([fw,Math.round(fw*0.6),Math.round(fw*1.4),Math.round(fw*0.35)].map(String));
+  pool.push({
+    q:'How many women have won a Nobel Prize (individuals only)?',
+    opts:wOpts.slice(0,4),
+    ans:String(fw),
+    exp:`A total of ${fw} women have won Nobel Prizes since 1901, across all categories.`,
+  });
+
+  // Q-type E: Which category has the most records?
+  const catCounts={};
+  LAUREATES.forEach(l=>{catCounts[l.category]=(catCounts[l.category]||0)+1;});
+  const sortedCats=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);
+  const top4cats=sortedCats.slice(0,4).map(([c])=>CAT_LABEL[c]||c);
+  pool.push({
+    q:'Which Nobel Prize category has the most individual laureate records in total?',
+    opts:shuffle(top4cats),
+    ans:top4cats[0],
+    exp:`${top4cats[0]} has the most records (${sortedCats[0][1]}), reflecting a long history of multiple winners sharing prizes.`,
+  });
+
+  // Q-type F: Which category was added last?
+  pool.push({
+    q:'Which Nobel Prize was the most recently established?',
+    opts:shuffle(['Economics','Physics','Literature','Peace']),
+    ans:'Economics',
+    exp:`The Nobel Prize in Economics was established in 1968 by Sweden\'s central bank and first awarded in 1969. The others were founded in 1895 by Alfred Nobel himself.`,
+  });
+
+  // Q-type G: Random "born in country" question
+  const bigCnts=D.sortedCnts.filter(([,n])=>n>=5).map(([c])=>c);
+  const qgCnt=randEl(bigCnts);
+  const correctCntCount=D.cntMap[qgCnt];
+  const wrongCnts=shuffle(bigCnts.filter(c=>c!==qgCnt&&D.cntMap[c]!==correctCntCount)).slice(0,3);
+  if (wrongCnts.length===3) {
+    pool.push({
+      q:`How many Nobel laureates were born in ${qgCnt}?`,
+      opts:shuffle([correctCntCount,...wrongCnts.map(c=>D.cntMap[c])].map(String)).slice(0,4),
+      ans:String(correctCntCount),
+      exp:`${qgCnt} has ${correctCntCount} Nobel laureates born there in the dataset.`,
+    });
+  }
+
+  return shuffle(pool).slice(0,5);
+}
+
+function renderQuizProg() {
+  const {qs,cur}=state.quiz;
+  document.getElementById('quizProg').innerHTML=qs.map((_,i)=>`
+    <div class="q-dot${i<cur?' done':i===cur?' curr':''}" aria-label="Q${i+1}: ${i<cur?'answered':i===cur?'current':'upcoming'}"></div>`).join('');
+}
+
+function renderQ() {
+  const {qs,cur,answered,selIdx}=state.quiz;
+  if (cur>=qs.length) { renderResult(); return; }
+  const q=qs[cur];
+  const html=`
+    <div class="quiz-card">
+      <div class="q-num">Question ${cur+1} of ${qs.length}</div>
+      <div class="q-text">${esc(q.q)}</div>
+      <div class="q-opts" role="group" aria-label="Answer choices">
+        ${q.opts.map((opt,i)=>{
+          let cls='q-opt';
+          if(answered){
+            if(opt===q.ans) cls+=' correct';
+            else if(i===selIdx&&opt!==q.ans) cls+=' wrong';
+          }
+          return `<button class="${cls}" onclick="${answered?'':('selAns('+i+')')}" ${answered?'disabled':''} aria-label="Option ${i+1}: ${esc(opt)}">
+            <span aria-hidden="true" style="font-weight:800;margin-right:6px;">${['A','B','C','D'][i]}.</span>${esc(opt)}
+          </button>`;
+        }).join('')}
+      </div>
+      ${answered?`<div class="q-explain" role="alert">💡 <strong>Did you know?</strong> ${esc(q.exp)}</div>`:''}
+    </div>
+    ${answered?`<div style="text-align:center;">
+      <button class="btn-primary" onclick="nextQ()">${cur+1<qs.length?'Next Question →':'See Results 🏆'}</button>
+    </div>`:''}`;
+  document.getElementById('quizContent').innerHTML=html;
+}
+
+function selAns(i) {
+  const {qs,cur}=state.quiz;
+  const q=qs[cur];
+  if(q.opts[i]===q.ans) state.quiz.score++;
+  state.quiz.answered=true;
+  state.quiz.selIdx=i;
+  renderQ();
+  renderQuizProg();
+}
+function nextQ() {
+  state.quiz.cur++;
+  state.quiz.answered=false;
+  state.quiz.selIdx=-1;
+  renderQuizProg();
+  renderQ();
+}
+function renderResult() {
+  const {score,qs}=state.quiz;
+  const pct=Math.round(score/qs.length*100);
+  const [ico,msg]= pct===100 ? ['🏆',"Perfect score! You're a true Nobel expert!"]
+    : pct>=80 ? ['⭐','Outstanding! You know your Nobel history really well!']
+    : pct>=60 ? ['👍','Great effort! You\'ve learned a lot about the Nobel Prizes!']
+    : pct>=40 ? ['📚','Good try! Keep exploring to discover more!']
+    : ['🌱','Every expert starts somewhere — keep exploring!'];
+  document.getElementById('quizContent').innerHTML=`
+    <div class="quiz-result">
+      <span class="result-emoji" aria-hidden="true">${ico}</span>
+      <div class="result-score" aria-label="${score} out of ${qs.length}">${score}/${qs.length}</div>
+      <p class="result-msg">${msg}</p>
+      <div class="result-btns">
+        <button class="btn-primary" onclick="startQuiz()">Try Again 🔄</button>
+        <button class="btn-secondary" onclick="navigate('explorer')">Explore Laureates</button>
+        <button class="btn-secondary" onclick="navigate('stories')">Read Stories</button>
+      </div>
+    </div>`;
+  document.getElementById('quizProg').innerHTML='';
+}
+
+// ════════════════════════════════════════════════════════
+// UTILITIES
+// ════════════════════════════════════════════════════════
+function esc(s) {
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function randEl(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+function shuffle(a) {
+  const r=[...a];
+  for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}
+  return r;
+}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderHome();
+});
+</script>
+</body>
+</html>
