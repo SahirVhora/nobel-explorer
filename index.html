@@ -664,7 +664,7 @@ function initExplorer() {
   expInited = true;
   const dd = document.getElementById('decFilter');
   dd.innerHTML = '<option value="all">All Decades</option>';
-  D.decades.forEach(d => {
+  [...D.decades].reverse().forEach(d => {
     const o = document.createElement('option');
     o.value = d; o.textContent = `${d}s`; dd.appendChild(o);
   });
@@ -697,6 +697,7 @@ function applyFilters() {
   });
 
   state.exp.filtered = dedupePersons(raw);
+  state.exp.filtered.sort((a, b) => b.year - a.year || a.category.localeCompare(b.category));
   state.exp.page = 1;
   renderCards();
 }
