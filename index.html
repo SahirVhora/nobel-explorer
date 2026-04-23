@@ -468,6 +468,17 @@ footer a{color:var(--gold);}
       <canvas id="chartCountry" aria-label="Horizontal bar chart showing top 10 countries by Nobel laureate count"></canvas>
     </div>
   </div>
+  <div class="chart-wrap">
+    <h3>⚖️ Country Comparison</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+      <select class="filt-sel" id="cmpCountryA" onchange="renderCompareChart()" aria-label="Select first country for comparison" style="flex:1;min-width:150px;"></select>
+      <span style="color:var(--text-muted);font-weight:700;">vs</span>
+      <select class="filt-sel" id="cmpCountryB" onchange="renderCompareChart()" aria-label="Select second country for comparison" style="flex:1;min-width:150px;"></select>
+    </div>
+    <div class="chart-container">
+      <canvas id="chartCompare" aria-label="Grouped bar chart comparing Nobel prizes per decade for two selected countries"></canvas>
+    </div>
+  </div>
 </section>
 </main>
 
@@ -637,11 +648,20 @@ function updateExplorerHash() {
 }
 
 function copyShareLink() {
+  const btn = document.querySelector('[onclick="copyShareLink()"]');
+  const setLabel = text => { if (btn) btn.textContent = text; };
+  const orig = btn ? btn.textContent : '🔗 Share';
+  if (!navigator.clipboard) {
+    setLabel('⚠️ Not supported');
+    setTimeout(() => setLabel(orig), 2000);
+    return;
+  }
   navigator.clipboard.writeText(location.href).then(() => {
-    const btn = document.querySelector('[onclick="copyShareLink()"]');
-    const orig = btn.textContent;
-    btn.textContent = '✅ Copied!';
-    setTimeout(() => { btn.textContent = orig; }, 2000);
+    setLabel('✅ Copied!');
+    setTimeout(() => setLabel(orig), 2000);
+  }).catch(() => {
+    setLabel('⚠️ Failed');
+    setTimeout(() => setLabel(orig), 2000);
   });
 }
 
@@ -677,6 +697,7 @@ function navigate(sec) {
   state.section = sec;
   window.scrollTo({top: 0, behavior: 'smooth'});
   if (!_fromHash) pushHash(sec);
+  if (sec === 'home') renderHome();
   if (sec === 'explorer') initExplorer();
   if (sec === 'timeline') initTimeline();
   if (sec === 'map') initMap();
@@ -698,6 +719,7 @@ function toggleTheme() {
     renderDecadeCatChart();
     renderGenderChart();
     updateCountryChart();
+    renderCompareChart();
   }
 }
 function toggleMenu() {
@@ -1563,9 +1585,21 @@ function initTrends() {
     const o = document.createElement('option');
     o.value = d; o.textContent = `${d}s`; decSel.appendChild(o);
   });
+  // Populate country comparison dropdowns with top countries
+  const topCnts = D.sortedCnts.slice(0, 40).map(([c]) => c);
+  ['cmpCountryA','cmpCountryB'].forEach((id, i) => {
+    const sel = document.getElementById(id);
+    topCnts.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c; o.textContent = c; sel.appendChild(o);
+    });
+    // Default: USA vs United Kingdom
+    sel.value = i === 0 ? 'USA' : 'United Kingdom';
+  });
   renderDecadeCatChart();
   renderGenderChart();
   updateCountryChart();
+  renderCompareChart();
 }
 
 function renderDecadeCatChart() {
@@ -1663,11 +1697,41 @@ function updateCountryChart() {
   });
 }
 
+let chartCompare = null;
+function renderCompareChart() {
+  if (chartCompare) chartCompare.destroy();
+  const cntA = document.getElementById('cmpCountryA')?.value || 'USA';
+  const cntB = document.getElementById('cmpCountryB')?.value || 'United Kingdom';
+  const labels = D.decades.map(d => `${d}s`);
+  const dataA = D.decades.map(dec => LAUREATES.filter(l => normC(l.bornCountry) === cntA && Math.floor(l.year/10)*10 === dec).length);
+  const dataB = D.decades.map(dec => LAUREATES.filter(l => normC(l.bornCountry) === cntB && Math.floor(l.year/10)*10 === dec).length);
+  const goldColor = getCSSVar('--gold');
+  const peaceColor = getCSSVar('--peace');
+  const ctx = document.getElementById('chartCompare').getContext('2d');
+  chartCompare = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: cntA, data: dataA, backgroundColor: goldColor + 'CC', borderColor: goldColor, borderWidth: 1 },
+        { label: cntB, data: dataB, backgroundColor: peaceColor + 'CC', borderColor: peaceColor, borderWidth: 1 },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { color: getCSSVar('--text') } } },
+      scales: {
+        x: { ticks: { color: getCSSVar('--text-muted') }, grid: { color: getCSSVar('--border') } },
+        y: { ticks: { color: getCSSVar('--text-muted'), stepSize: 1 }, grid: { color: getCSSVar('--border') } },
+      },
+    },
+  });
+}
+
 // ════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  renderHome();
   applyHashState();
 });
 </script>
