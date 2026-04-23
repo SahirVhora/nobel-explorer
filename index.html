@@ -380,7 +380,7 @@ footer a{color:var(--gold);}
       <option value="male">Men</option>
       <option value="org">Organisations</option>
     </select>
-    <button class="btn-secondary" style="font-size:.8rem;padding:8px 16px;" onclick="copyShareLink()" title="Copy shareable link to clipboard" aria-label="Copy shareable link">🔗 Share</button>
+    <button id="shareBtn" class="btn-secondary" style="font-size:.8rem;padding:8px 16px;" onclick="copyShareLink()" title="Copy shareable link to clipboard" aria-label="Copy shareable link">🔗 Share</button>
   </div>
   <div id="resultsInfo" class="results-info" aria-live="polite" aria-atomic="true"></div>
   <div id="cardsGrid" class="cards-grid" role="list" aria-label="Laureate cards"></div>
@@ -648,7 +648,7 @@ function updateExplorerHash() {
 }
 
 function copyShareLink() {
-  const btn = document.querySelector('[onclick="copyShareLink()"]');
+  const btn = document.getElementById('shareBtn');
   const setLabel = text => { if (btn) btn.textContent = text; };
   const orig = btn ? btn.textContent : '🔗 Share';
   if (!navigator.clipboard) {
@@ -1593,8 +1593,10 @@ function initTrends() {
       const o = document.createElement('option');
       o.value = c; o.textContent = c; sel.appendChild(o);
     });
-    // Default: USA vs United Kingdom
-    sel.value = i === 0 ? 'USA' : 'United Kingdom';
+    // Default: USA vs United Kingdom (fall back to first two entries if not present)
+    const defaults = ['USA', 'United Kingdom'];
+    const preferred = defaults[i];
+    sel.value = topCnts.includes(preferred) ? preferred : (topCnts[i] || topCnts[0] || '');
   });
   renderDecadeCatChart();
   renderGenderChart();
@@ -1700,11 +1702,19 @@ function updateCountryChart() {
 let chartCompare = null;
 function renderCompareChart() {
   if (chartCompare) chartCompare.destroy();
-  const cntA = document.getElementById('cmpCountryA')?.value || 'USA';
-  const cntB = document.getElementById('cmpCountryB')?.value || 'United Kingdom';
+  const cntA = document.getElementById('cmpCountryA')?.value || '';
+  const cntB = document.getElementById('cmpCountryB')?.value || '';
+  // Pre-compute per-decade counts for each country in one pass
+  const aggA = {}, aggB = {};
+  LAUREATES.forEach(l => {
+    const c = normC(l.bornCountry);
+    const dec = Math.floor(l.year / 10) * 10;
+    if (c === cntA) aggA[dec] = (aggA[dec] || 0) + 1;
+    if (c === cntB) aggB[dec] = (aggB[dec] || 0) + 1;
+  });
   const labels = D.decades.map(d => `${d}s`);
-  const dataA = D.decades.map(dec => LAUREATES.filter(l => normC(l.bornCountry) === cntA && Math.floor(l.year/10)*10 === dec).length);
-  const dataB = D.decades.map(dec => LAUREATES.filter(l => normC(l.bornCountry) === cntB && Math.floor(l.year/10)*10 === dec).length);
+  const dataA = D.decades.map(d => aggA[d] || 0);
+  const dataB = D.decades.map(d => aggB[d] || 0);
   const goldColor = getCSSVar('--gold');
   const peaceColor = getCSSVar('--peace');
   const ctx = document.getElementById('chartCompare').getContext('2d');
@@ -1713,8 +1723,8 @@ function renderCompareChart() {
     data: {
       labels,
       datasets: [
-        { label: cntA, data: dataA, backgroundColor: goldColor + 'CC', borderColor: goldColor, borderWidth: 1 },
-        { label: cntB, data: dataB, backgroundColor: peaceColor + 'CC', borderColor: peaceColor, borderWidth: 1 },
+        { label: cntA || 'Country A', data: dataA, backgroundColor: goldColor + 'CC', borderColor: goldColor, borderWidth: 1 },
+        { label: cntB || 'Country B', data: dataB, backgroundColor: peaceColor + 'CC', borderColor: peaceColor, borderWidth: 1 },
       ],
     },
     options: {
