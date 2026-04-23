@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nobel Prize Explorer</title>
+<meta property="og:title" content="Nobel Prize Explorer">
+<meta property="og:description" content="Discover 1,026 Nobel laureates — search, filter, explore by map, timeline and quiz. Works offline.">
+<meta property="og:type" content="website">
 <style>
 /* ══════════════════════════════════════════════
    CSS VARIABLES & THEMING
@@ -238,6 +241,12 @@ footer a{color:var(--gold);}
   .stories-grid{grid-template-columns:1fr;}
 }
 @media(min-width:769px){.hamburger{display:none;}}
+/* ══════════════════════════════════════════════
+   TRENDS / CHARTS
+══════════════════════════════════════════════ */
+.chart-wrap{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:24px;margin-bottom:28px;}
+.chart-wrap h3{font-size:1.05rem;color:var(--gold);margin-bottom:16px;}
+.chart-container{position:relative;height:320px;}
 /* Scrollbar */
 ::-webkit-scrollbar{width:7px;height:7px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
@@ -308,6 +317,7 @@ footer a{color:var(--gold);}
 .qsb-correct{color:#10B981;}
 .qsb-wrong{color:#EF4444;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
@@ -321,6 +331,7 @@ footer a{color:var(--gold);}
     <button class="nav-btn" onclick="navigate('map')" data-sec="map" role="menuitem">World Map</button>
     <button class="nav-btn" onclick="navigate('stories')" data-sec="stories" role="menuitem">Stories</button>
     <button class="nav-btn" onclick="navigate('quiz')" data-sec="quiz" role="menuitem">Quiz</button>
+    <button class="nav-btn" onclick="navigate('trends')" data-sec="trends" role="menuitem">Trends</button>
   </div>
   <button id="themeToggle" onclick="toggleTheme()" aria-label="Switch to dark mode" title="Toggle dark mode">🌙</button>
   <button class="hamburger" onclick="toggleMenu()" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks">☰</button>
@@ -369,6 +380,7 @@ footer a{color:var(--gold);}
       <option value="male">Men</option>
       <option value="org">Organisations</option>
     </select>
+    <button class="btn-secondary" style="font-size:.8rem;padding:8px 16px;" onclick="copyShareLink()" title="Copy shareable link to clipboard" aria-label="Copy shareable link">🔗 Share</button>
   </div>
   <div id="resultsInfo" class="results-info" aria-live="polite" aria-atomic="true"></div>
   <div id="cardsGrid" class="cards-grid" role="list" aria-label="Laureate cards"></div>
@@ -426,6 +438,35 @@ footer a{color:var(--gold);}
     </div>
     <div id="quizProg" class="quiz-prog" role="progressbar" aria-label="Quiz progress"></div>
     <div id="quizContent"></div>
+  </div>
+</section>
+
+<!-- ── TRENDS ── -->
+<section id="trends" class="section" aria-labelledby="tr-h1">
+  <h1 class="section-title" id="tr-h1">Trends &amp; Analytics</h1>
+  <p class="section-sub">Visual insights into 120+ years of Nobel Prize history</p>
+  <div class="chart-wrap">
+    <h3>📊 Prizes by Category per Decade</h3>
+    <div class="chart-container">
+      <canvas id="chartDecadeCat" aria-label="Stacked bar chart showing Nobel prizes by category per decade"></canvas>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <h3>♀ Female Laureates Over Time</h3>
+    <div class="chart-container">
+      <canvas id="chartGender" aria-label="Line chart showing percentage of female Nobel laureates per decade"></canvas>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <h3>🌍 Top 10 Countries</h3>
+    <div style="margin-bottom:12px;">
+      <select class="filt-sel" id="trendDecFilter" onchange="updateCountryChart()" aria-label="Filter country chart by decade">
+        <option value="all">All Time</option>
+      </select>
+    </div>
+    <div class="chart-container">
+      <canvas id="chartCountry" aria-label="Horizontal bar chart showing top 10 countries by Nobel laureate count"></canvas>
+    </div>
   </div>
 </section>
 </main>
@@ -561,6 +602,71 @@ const state = {
 };
 
 // ════════════════════════════════════════════════════════
+// HASH ROUTING
+// ════════════════════════════════════════════════════════
+let _fromHash = false;
+
+function pushHash(sec, params) {
+  const extra = params ? '&' + new URLSearchParams(params).toString() : '';
+  history.replaceState(null, '', '#' + sec + extra);
+}
+
+function parseHash() {
+  const raw = location.hash.slice(1);
+  if (!raw) return { sec: 'home', params: {} };
+  const [sec, ...rest] = raw.split('&');
+  const params = Object.fromEntries(new URLSearchParams(rest.join('&')));
+  return { sec: sec || 'home', params };
+}
+
+function updateExplorerHash() {
+  const cat = document.getElementById('catFilter')?.value || 'all';
+  const dec = document.getElementById('decFilter')?.value || 'all';
+  const cnt = document.getElementById('cntFilter')?.value || 'all';
+  const gen = document.getElementById('genFilter')?.value || 'all';
+  const search = document.getElementById('searchInput')?.value || '';
+  const page = state.exp.page;
+  const params = {};
+  if (cat !== 'all') params.cat = cat;
+  if (dec !== 'all') params.dec = dec;
+  if (cnt !== 'all') params.cnt = cnt;
+  if (gen !== 'all') params.gen = gen;
+  if (search) params.search = search;
+  if (page > 1) params.page = page;
+  pushHash('explorer', Object.keys(params).length ? params : null);
+}
+
+function copyShareLink() {
+  navigator.clipboard.writeText(location.href).then(() => {
+    const btn = document.querySelector('[onclick="copyShareLink()"]');
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  });
+}
+
+function applyHashState() {
+  const { sec, params } = parseHash();
+  const validSecs = ['home','explorer','timeline','map','stories','quiz','trends'];
+  const target = validSecs.includes(sec) ? sec : 'home';
+  _fromHash = true;
+  navigate(target);
+  _fromHash = false;
+  if (target === 'explorer') {
+    requestAnimationFrame(() => {
+      if (params.cat) document.getElementById('catFilter').value = params.cat;
+      if (params.dec) document.getElementById('decFilter').value = params.dec;
+      if (params.cnt) document.getElementById('cntFilter').value = params.cnt;
+      if (params.gen) document.getElementById('genFilter').value = params.gen;
+      if (params.search) document.getElementById('searchInput').value = params.search;
+      if (params.page) state.exp.page = parseInt(params.page) || 1;
+      applyFilters();
+    });
+  }
+}
+window.addEventListener('hashchange', applyHashState);
+
+// ════════════════════════════════════════════════════════
 // ROUTING
 // ════════════════════════════════════════════════════════
 function navigate(sec) {
@@ -570,11 +676,13 @@ function navigate(sec) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.sec === sec));
   state.section = sec;
   window.scrollTo({top: 0, behavior: 'smooth'});
+  if (!_fromHash) pushHash(sec);
   if (sec === 'explorer') initExplorer();
   if (sec === 'timeline') initTimeline();
   if (sec === 'map') initMap();
   if (sec === 'stories') initStories();
   if (sec === 'quiz' && state.quiz.qs.length === 0) startQuiz();
+  if (sec === 'trends') initTrends();
 }
 
 // ════════════════════════════════════════════════════════
@@ -586,6 +694,11 @@ function toggleTheme() {
   const btn = document.getElementById('themeToggle');
   btn.textContent = state.dark ? '☀️' : '🌙';
   btn.setAttribute('aria-label', state.dark ? 'Switch to light mode' : 'Switch to dark mode');
+  if (trendsInited) {
+    renderDecadeCatChart();
+    renderGenderChart();
+    updateCountryChart();
+  }
 }
 function toggleMenu() {
   state.menuOpen = !state.menuOpen;
@@ -700,6 +813,7 @@ function applyFilters() {
   state.exp.filtered.sort((a, b) => b.year - a.year || a.category.localeCompare(b.category));
   state.exp.page = 1;
   renderCards();
+  if (state.section === 'explorer') updateExplorerHash();
 }
 
 // Merge multi-prize winners into one entry with a ._prizes array.
@@ -761,6 +875,7 @@ function smartRange(cur, tot) {
 function goPage(p) {
   state.exp.page = p;
   renderCards();
+  updateExplorerHash();
   document.getElementById('explorer').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -1431,10 +1546,129 @@ function countUp(el, target, suffix='', duration=1200) {
 }
 
 // ════════════════════════════════════════════════════════
+// TRENDS & CHARTS
+// ════════════════════════════════════════════════════════
+let trendsInited = false;
+let chartDecadeCat = null, chartGender = null, chartCountry = null;
+
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function initTrends() {
+  if (trendsInited) return;
+  trendsInited = true;
+  const decSel = document.getElementById('trendDecFilter');
+  [...D.decades].reverse().forEach(d => {
+    const o = document.createElement('option');
+    o.value = d; o.textContent = `${d}s`; decSel.appendChild(o);
+  });
+  renderDecadeCatChart();
+  renderGenderChart();
+  updateCountryChart();
+}
+
+function renderDecadeCatChart() {
+  if (chartDecadeCat) chartDecadeCat.destroy();
+  const cats = ['physics','chemistry','medicine','literature','peace','economics'];
+  const labels = D.decades.map(d => `${d}s`);
+  const datasets = cats.map(cat => ({
+    label: CAT_LABEL[cat],
+    data: D.decades.map(dec => LAUREATES.filter(l => l.category === cat && Math.floor(l.year/10)*10 === dec).length),
+    backgroundColor: getCSSVar(`--${cat}`),
+  }));
+  const ctx = document.getElementById('chartDecadeCat').getContext('2d');
+  chartDecadeCat = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { color: getCSSVar('--text') } } },
+      scales: {
+        x: { stacked: true, ticks: { color: getCSSVar('--text-muted') }, grid: { color: getCSSVar('--border') } },
+        y: { stacked: true, ticks: { color: getCSSVar('--text-muted') }, grid: { color: getCSSVar('--border') } },
+      },
+    },
+  });
+}
+
+function renderGenderChart() {
+  if (chartGender) chartGender.destroy();
+  const labels = D.decades.map(d => `${d}s`);
+  const data = D.decades.map(dec => {
+    const group = LAUREATES.filter(l => Math.floor(l.year/10)*10 === dec && l.gender !== 'org');
+    if (!group.length) return 0;
+    return Math.round(group.filter(l => l.gender === 'female').length / group.length * 100);
+  });
+  const peaceColor = getCSSVar('--peace');
+  const ctx = document.getElementById('chartGender').getContext('2d');
+  chartGender = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: '% Female Laureates',
+        data,
+        borderColor: peaceColor,
+        backgroundColor: peaceColor + '33',
+        tension: 0.4, fill: true,
+        pointBackgroundColor: peaceColor,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: getCSSVar('--text') } } },
+      scales: {
+        x: { ticks: { color: getCSSVar('--text-muted') }, grid: { color: getCSSVar('--border') } },
+        y: {
+          min: 0, max: 100,
+          ticks: { color: getCSSVar('--text-muted'), callback: v => v + '%' },
+          grid: { color: getCSSVar('--border') },
+        },
+      },
+    },
+  });
+}
+
+function updateCountryChart() {
+  if (chartCountry) chartCountry.destroy();
+  const dec = document.getElementById('trendDecFilter')?.value || 'all';
+  const pool = dec === 'all' ? LAUREATES : LAUREATES.filter(l => Math.floor(l.year/10)*10 === +dec);
+  const cntMap = {};
+  pool.forEach(l => { const c = normC(l.bornCountry); if (c) cntMap[c] = (cntMap[c] || 0) + 1; });
+  const top10 = Object.entries(cntMap).sort((a,b) => b[1]-a[1]).slice(0,10);
+  const goldColor = getCSSVar('--gold');
+  const ctx = document.getElementById('chartCountry').getContext('2d');
+  chartCountry = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: top10.map(([c]) => c),
+      datasets: [{
+        label: 'Laureates',
+        data: top10.map(([,n]) => n),
+        backgroundColor: goldColor + 'CC',
+        borderColor: goldColor,
+        borderWidth: 1,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: getCSSVar('--text-muted') }, grid: { color: getCSSVar('--border') } },
+        y: { ticks: { color: getCSSVar('--text') } },
+      },
+    },
+  });
+}
+
+// ════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   renderHome();
+  applyHashState();
 });
 </script>
 </body>
