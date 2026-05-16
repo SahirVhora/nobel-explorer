@@ -1,4 +1,4 @@
-// Auto-generated Nobel Prize data — do not edit manually
+// Auto-generated Nobel Prize data - do not edit manually
 const LAUREATES = [
   {
     "id": 1,

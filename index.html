@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nobel Prize Explorer</title>
-<meta name="description" content="Nobel Prize Explorer — interactive SPA with 1,026 Nobel laureates. Search, filter, and explore laureates by category, year, country, and gender.">
+<meta name="description" content="Nobel Prize Explorer - interactive SPA with 1,026 Nobel laureates. Search, filter, and explore laureates by category, year, country, and gender.">
 <meta property="og:title" content="Nobel Prize Explorer">
 <meta property="og:image" content="https://sahirvhora.github.io/nobel-explorer/preview.svg">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://sahirvhora.github.io/nobel-explorer/preview.svg">
-<meta property="og:description" content="Discover 1,026 Nobel laureates — search, filter, explore by map, timeline and quiz. Works offline.">
+<meta property="og:description" content="Discover 1,026 Nobel laureates - search, filter, explore by map, timeline and quiz. Works offline.">
 <meta property="og:type" content="website">
 <style>
 /* ══════════════════════════════════════════════
@@ -118,7 +118,7 @@ img{max-width:100%;height:auto;}
 .filt-sel:focus{outline:none;border-color:var(--gold);}
 .results-info{color:var(--text-muted);font-size:.82rem;margin-bottom:14px;}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;margin-bottom:28px;}
-/* Laureate Card — front face inherits these */
+/* Laureate Card - front face inherits these */
 .l-card{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;height:100%;}
 /* Hover lift lives on the flip wrapper, not l-card */
 .card-hd{padding:14px 18px 10px;border-bottom:3px solid var(--border);display:flex;align-items:center;gap:11px;}
@@ -294,7 +294,7 @@ footer a{color:var(--gold);}
 .flip-hint{font-size:.62rem;color:var(--text-muted);opacity:.7;}
 .multi-badge-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
 /* ══════════════════════════════════════════════
-   STORIES — PULL-QUOTE REDESIGN
+   STORIES - PULL-QUOTE REDESIGN
 ══════════════════════════════════════════════ */
 .stories-hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
 .stories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
@@ -355,7 +355,7 @@ footer a{color:var(--gold);}
   <div class="hero">
     <span class="medal" role="img" aria-label="Nobel Prize medal">🏅</span>
     <h1 id="home-h1">Nobel Prize Explorer</h1>
-    <p>Discover the brilliant minds who changed our world — from 1901 to today. Search, explore, and be inspired!</p>
+    <p>Discover the brilliant minds who changed our world - from 1901 to today. Search, explore, and be inspired!</p>
     <div class="hero-btns">
       <button class="btn-primary" onclick="discoverRandom()">✨ Random Laureate</button>
       <button class="btn-secondary" onclick="navigate('explorer')">Browse All Winners</button>
@@ -402,9 +402,9 @@ footer a{color:var(--gold);}
 <!-- ── TIMELINE ── -->
 <section id="timeline" class="section" aria-labelledby="tl-h1">
   <h1 class="section-title" id="tl-h1">Prize Timeline</h1>
-  <p class="section-sub">Scroll through Nobel history decade by decade — click any decade to explore those laureates</p>
+  <p class="section-sub">Scroll through Nobel history decade by decade - click any decade to explore those laureates</p>
   <div class="tl-axis" aria-hidden="true"></div>
-  <div class="tl-wrap" id="tlWrap" tabindex="0" aria-label="Timeline — scroll horizontally to navigate">
+  <div class="tl-wrap" id="tlWrap" tabindex="0" aria-label="Timeline - scroll horizontally to navigate">
     <div class="tl-track" id="tlTrack"></div>
   </div>
 </section>
@@ -412,7 +412,7 @@ footer a{color:var(--gold);}
 <!-- ── MAP ── -->
 <section id="map" class="section" aria-labelledby="map-h1">
   <h1 class="section-title" id="map-h1">World Map</h1>
-  <p class="section-sub">Where Nobel laureates come from — bubble size represents laureate count. Click a bubble to explore that country.</p>
+  <p class="section-sub">Where Nobel laureates come from - bubble size represents laureate count. Click a bubble to explore that country.</p>
   <div class="map-wrap">
     <svg id="worldMap" class="map-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="World bubble map of Nobel laureates by birth country"></svg>
     <div class="map-legend" aria-label="Map legend">
@@ -442,7 +442,7 @@ footer a{color:var(--gold);}
 <!-- ── QUIZ ── -->
 <section id="quiz" class="section" aria-labelledby="qz-h1">
   <h1 class="section-title" id="qz-h1">Nobel Quiz</h1>
-  <p class="section-sub">Test your knowledge with 5 random questions — every game is different!</p>
+  <p class="section-sub">Test your knowledge with 5 random questions - every game is different!</p>
   <div class="quiz-box">
     <div id="quizScoreBar" class="quiz-score-bar" style="display:none;" aria-live="polite">
       <span class="qsb-label">Running Score</span>
@@ -892,7 +892,7 @@ function goPage(p) {
 }
 
 // ════════════════════════════════════════════════════════
-// CARD BUILDER — with CSS 3D flip
+// CARD BUILDER - with CSS 3D flip
 // ════════════════════════════════════════════════════════
 function flipCard(el) {
   el.classList.toggle('flipped');
@@ -939,7 +939,7 @@ function buildCard(l) {
 
   return `<div class="flip-card c-${primaryCat}" onclick="flipCard(this)"
      tabindex="0" role="button"
-     aria-label="${esc(name)}${isMulti?' — '+prizes.length+'× laureate':''}, click to see details"
+     aria-label="${esc(name)}${isMulti?' - '+prizes.length+'× laureate':''}, click to see details"
      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();flipCard(this);}">
   <div class="flip-inner">
 
@@ -1007,11 +1007,11 @@ function initTimeline() {
     blk.className = 'decade-blk';
     blk.setAttribute('tabindex','0');
     blk.setAttribute('role','button');
-    blk.setAttribute('aria-label',`${decade}s — ${group.length} laureates. Press Enter to explore.`);
+    blk.setAttribute('aria-label',`${decade}s - ${group.length} laureates. Press Enter to explore.`);
     blk.innerHTML = `
       <div class="decade-lbl">${decade}s <span class="decade-cnt">${group.length}</span></div>
       <div class="decade-items">${shown.slice(0,7).map(l=>`
-        <div class="decade-item" title="${esc(l.firstname+' '+l.surname+' — '+CAT_LABEL[l.category]+' '+l.year)}">
+        <div class="decade-item" title="${esc(l.firstname+' '+l.surname+' - '+CAT_LABEL[l.category]+' '+l.year)}">
           ${CAT_EMOJI[l.category]||'🏅'} ${esc(l.firstname)} ${esc(l.surname)}
         </div>`).join('')}
       </div>`;
@@ -1221,7 +1221,7 @@ function initStories() {
   if (ALL_STORIES) { shuffleStories(); return; }
   const stories = [];
 
-  // 1 — Youngest
+  // 1 - Youngest
   if (D.youngest) {
     const l=D.youngest;
     const quote = l.motivation ? l.motivation.replace(/^"|"$/g,'') : `At just ${l.age} years old, one of the youngest Nobel laureates ever.`;
@@ -1231,7 +1231,7 @@ function initStories() {
       txt:quote, wiki:l.wiki_url});
   }
 
-  // 2 — Oldest
+  // 2 - Oldest
   if (D.oldest) {
     const l=D.oldest;
     const quote = l.motivation ? l.motivation.replace(/^"|"$/g,'') : `At the remarkable age of ${l.age}, proof that brilliance has no expiry date.`;
@@ -1241,7 +1241,7 @@ function initStories() {
       txt:quote, wiki:l.wiki_url});
   }
 
-  // 3 — Multi-winners
+  // 3 - Multi-winners
   D.multiW.slice(0,4).forEach(group => {
     const l=group[0];
     const wins=group.map(g=>`${CAT_LABEL[g.category]||g.category} (${g.year})`).join(' and ');
@@ -1253,7 +1253,7 @@ function initStories() {
       txt:quote, wiki:l.wiki_url});
   });
 
-  // 4 — First woman overall
+  // 4 - First woman overall
   const fw = LAUREATES.filter(l=>l.gender==='female').sort((a,b)=>a.year-b.year)[0];
   if (fw) {
     const quote = fw.motivation ? fw.motivation.replace(/^"|"$/g,'') : `A trailblazer who opened doors for generations of women in science and scholarship worldwide.`;
@@ -1263,7 +1263,7 @@ function initStories() {
       txt:quote, wiki:fw.wiki_url});
   }
 
-  // 5 — First woman in each STEM category
+  // 5 - First woman in each STEM category
   ['physics','chemistry','medicine','literature','peace'].forEach(cat=>{
     const fl=D.firstFemByCat[cat];
     if(!fl) return;
@@ -1275,28 +1275,28 @@ function initStories() {
       txt:quote, wiki:fl.wiki_url});
   });
 
-  // 6 — Top country
+  // 6 - Top country
   if (D.topCnt) {
     const [c,n]=D.topCnt;
     stories.push({ico:'🌎',cat:'gold',tag:'Most Nobel Laureates',
       name:c,
       meta:`${n} Nobel Prize winners from one nation`,
-      txt:`More Nobel Prize laureates were born in ${c} than any other country — ${n} in total. This reflects decades of world-leading investment in education, research, and the arts.`,
+      txt:`More Nobel Prize laureates were born in ${c} than any other country - ${n} in total. This reflects decades of world-leading investment in education, research, and the arts.`,
       wiki:null});
   }
 
-  // 7 — Organisation winners
+  // 7 - Organisation winners
   const orgWinners=LAUREATES.filter(l=>l.gender==='org');
   if (orgWinners.length>0) {
     const firstOrg=[...orgWinners].sort((a,b)=>a.year-b.year)[0];
     stories.push({ico:'🏢',cat:'peace',tag:'Organisation Laureates',
       name:`${orgWinners.length} Organisations Honoured`,
       meta:`Peace Prize recipients across the decades`,
-      txt:`Not only individuals receive Nobel Prizes — ${orgWinners.length} organisations have been honoured since ${firstOrg.year}, including bodies whose collective work has transformed global health, peace, and human rights.`,
+      txt:`Not only individuals receive Nobel Prizes - ${orgWinners.length} organisations have been honoured since ${firstOrg.year}, including bodies whose collective work has transformed global health, peace, and human rights.`,
       wiki:null});
   }
 
-  // 8 — Literature median age
+  // 8 - Literature median age
   const litA=D.withAge.filter(l=>l.category==='literature').map(l=>l.age).sort((a,b)=>a-b);
   if (litA.length>0) {
     const med=litA[Math.floor(litA.length/2)];
@@ -1304,11 +1304,11 @@ function initStories() {
     stories.push({ico:'📚',cat:'literature',tag:'Nobel Literature Prize',
       name:'The Prize in Literature',
       meta:`${litA.length} winners · Median age at prize: ${med}`,
-      txt:yLit?.motivation ? yLit.motivation.replace(/^"|"$/g,'') : `Writers often wait a lifetime for recognition — the literature prize has a median award age of ${med}, the highest of any category.`,
+      txt:yLit?.motivation ? yLit.motivation.replace(/^"|"$/g,'') : `Writers often wait a lifetime for recognition - the literature prize has a median award age of ${med}, the highest of any category.`,
       wiki:yLit?.wiki_url||null});
   }
 
-  // 9 — Economics (newest prize)
+  // 9 - Economics (newest prize)
   const econFirst=LAUREATES.filter(l=>l.category==='economics').sort((a,b)=>a.year-b.year)[0];
   if (econFirst) {
     const quote = econFirst.motivation ? econFirst.motivation.replace(/^"|"$/g,'') : `First winner of the Nobel Prize in Economics, a prize established in 1968 by Sweden's central bank.`;
@@ -1318,7 +1318,7 @@ function initStories() {
       txt:quote, wiki:econFirst.wiki_url});
   }
 
-  // 10 — Most recent person laureate
+  // 10 - Most recent person laureate
   const lastL=[...LAUREATES].filter(l=>l.gender!=='org').sort((a,b)=>b.year-a.year||a.category.localeCompare(b.category))[0];
   if (lastL) {
     const quote = lastL.motivation ? lastL.motivation.replace(/^"|"$/g,'') : `Among the most recent Nobel laureates (${lastL.year}).`;
@@ -1328,7 +1328,7 @@ function initStories() {
       txt:quote, wiki:lastL.wiki_url});
   }
 
-  // 11 — Random solo winners from different categories for colour variety
+  // 11 - Random solo winners from different categories for colour variety
   ['physics','chemistry','medicine','peace','economics'].forEach(cat => {
     const sole=LAUREATES.filter(l=>l.category===cat&&l.share===1&&l.gender!=='org'&&l.motivation);
     if (!sole.length) return;
@@ -1514,7 +1514,7 @@ function renderResult() {
     : pct>=80 ? ['⭐','Outstanding! You know your Nobel history really well!']
     : pct>=60 ? ['👍','Great effort! You\'ve learned a lot about the Nobel Prizes!']
     : pct>=40 ? ['📚','Good try! Keep exploring to discover more!']
-    : ['🌱','Every expert starts somewhere — keep exploring!'];
+    : ['🌱','Every expert starts somewhere - keep exploring!'];
   document.getElementById('quizContent').innerHTML=`
     <div class="quiz-result">
       <span class="result-emoji" aria-hidden="true">${ico}</span>
