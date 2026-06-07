@@ -417,9 +417,9 @@ footer a{color:var(--gold);}
     <svg id="worldMap" class="map-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="World bubble map of Nobel laureates by birth country"></svg>
     <div class="map-legend" aria-label="Map legend">
       <strong>Bubble size = laureate count:</strong>
-      <div class="lg-item"><div class="lg-dot" style="width:8px;height:8px;"></div><span>1–5</span></div>
-      <div class="lg-item"><div class="lg-dot" style="width:14px;height:14px;"></div><span>6–20</span></div>
-      <div class="lg-item"><div class="lg-dot" style="width:22px;height:22px;"></div><span>21–60</span></div>
+      <div class="lg-item"><div class="lg-dot" style="width:8px;height:8px;"></div><span>1-5</span></div>
+      <div class="lg-item"><div class="lg-dot" style="width:14px;height:14px;"></div><span>6-20</span></div>
+      <div class="lg-item"><div class="lg-dot" style="width:22px;height:22px;"></div><span>21-60</span></div>
       <div class="lg-item"><div class="lg-dot" style="width:30px;height:30px;"></div><span>60+</span></div>
     </div>
   </div>
@@ -729,7 +729,7 @@ function renderHome() {
     {ico:'👩‍🔬', num: D.females,           suffix:` (${D.femalePct}%)`, lbl:'Women Laureates'},
     {ico:'🧒', num: D.youngest?.age,     suffix:'',                lbl:`Youngest at Award${D.youngest ? ' · '+D.youngest.firstname+' '+D.youngest.surname : ''}`},
     {ico:'👴', num: D.oldest?.age,       suffix:'',                lbl:`Oldest at Award${D.oldest ? ' · '+D.oldest.firstname+' '+D.oldest.surname : ''}`},
-    {ico:'📅', num: null, suffix:`${D.minY}–${D.maxY}`,            lbl:'Years of Prizes'},
+    {ico:'📅', num: null, suffix:`${D.minY}-${D.maxY}`,            lbl:'Years of Prizes'},
   ];
   document.getElementById('homeStats').innerHTML = stats.map((s,i) => `
     <div class="stat-card" tabindex="0">
@@ -854,7 +854,7 @@ function renderCards() {
   const slice = filtered.slice(start, start+PER_PAGE);
 
   document.getElementById('resultsInfo').textContent =
-    `Showing ${total === 0 ? 0 : start+1}–${Math.min(start+PER_PAGE, total)} of ${total} laureates`;
+    `Showing ${total === 0 ? 0 : start+1}-${Math.min(start+PER_PAGE, total)} of ${total} laureates`;
 
   const grid = document.getElementById('cardsGrid');
   if (slice.length === 0) {
