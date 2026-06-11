@@ -51,3 +51,13 @@ Data is loaded as a static JavaScript array - no network requests, instant filte
 ## License
 
 MIT - see [LICENSE](LICENSE)
+
+---
+
+## More free learning tools
+
+- [StarLearn](https://sahirvhora.github.io/starlearn/) - Free UK primary learning platform - Years 4-6, 494 topics
+- [Year 4 Prep](https://sahirvhora.github.io/year4-prep/) - Free Year 4 SATs practice papers - 36 PDFs, updated weekly
+- [Worksheet Generator](https://sahirvhora.github.io/worksheet-generator/) - Printable SATs-style worksheets - KS1/KS2 Maths, Reading, SPaG
+- [PassMate UK](https://sahirvhora.github.io/passmate-uk/) - Free UK car theory test practice - 304 questions, works offline
+- [11+ Prep](https://sahirvhora.github.io/11plus-prep/) - Free 11+ exam practice - region-specific papers
