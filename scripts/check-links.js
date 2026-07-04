@@ -127,7 +127,9 @@ async function checkUrl(url, cache) {
       }
       // Treat 429 (rate limited) as retryable, not broken — but only within
       // this run. If retries are exhausted, cache the 429 with a short TTL
-      // so the next run within an hour doesn't hammer Wikipedia again.
+      // and mark as ok=true so a single CI run doesn't fail the build just
+      // because Wikipedia throttled us. The entry will be re-checked once
+      // the TTL expires (1 hour).
       if (resp.status === 429 && attempt < MAX_429_RETRIES) {
         attempt += 1;
         clearTimeout(timer);
@@ -135,7 +137,10 @@ async function checkUrl(url, cache) {
         continue;
       }
       const ttl = resp.status === 429 ? CACHE_TTL_429_MS : CACHE_TTL_MS;
-      const result = { url, status: resp.status, ok: resp.status < 400 };
+      const ok = resp.status >= 200 && resp.status < 400;
+      // 429 is a rate limit, not a broken link — don't fail the build on it
+      const effectiveOk = ok || resp.status === 429;
+      const result = { url, status: resp.status, ok: effectiveOk };
       cache[url] = { ...result, expires: now + ttl };
       return result;
     } catch (e) {
@@ -308,7 +313,15 @@ async function main() {
     }
     process.exit(1);
   }
-  console.log(`\nAll reachable links returned 2xx/3xx.`);
+  // Also report rate-limited URLs as a warning so the team can see when
+  // Wikipedia is throttling, even though we don't fail the build on them
+  const rateLimited = results.filter((r) => r.status === 429);
+  if (rateLimited.length > 0) {
+    console.log(`\nNote: ${rateLimited.length} URL(s) were rate-limited (HTTP 429) and skipped.`);
+    console.log(`They'll be re-checked on the next run. To force a fresh sweep, delete`);
+    console.log(`.check-links-cache.json and re-run.`);
+  }
+  console.log(`\nAll reachable links returned 2xx/3xx (or 429/timeout which is non-fatal).`);
   process.exit(0);
 }
 
