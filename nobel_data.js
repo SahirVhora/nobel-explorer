@@ -23320,7 +23320,7 @@ const LAUREATES = [
     "name": "Sonoma Biotherapeutics",
     "city": "San Francisco CA",
     "country": "USA",
-    "wiki_url": "https://en.wikipedia.org/wiki/Frederick_J._Ramsdell"
+    "wiki_url": "https://en.wikipedia.org/wiki/Frederick_Ramsdell"
   },
   {
     "id": 1049,
