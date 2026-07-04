@@ -8853,7 +8853,7 @@ const LAUREATES = [
     "name": "Rockefeller University",
     "city": "New York NY",
     "country": "USA",
-    "wiki_url": "https://en.wikipedia.org/wiki/Keffer_Hartline"
+    "wiki_url": "https://en.wikipedia.org/wiki/Haldan_Keffer_Hartline"
   },
   {
     "id": 387,
@@ -16535,7 +16535,7 @@ const LAUREATES = [
     "name": "",
     "city": "",
     "country": "",
-    "wiki_url": "https://en.wikipedia.org/wiki/Xingjian_Gao"
+    "wiki_url": "https://en.wikipedia.org/wiki/Gao_Xingjian"
   },
   {
     "id": 735,
@@ -20859,7 +20859,7 @@ const LAUREATES = [
     "name": "Northwestern University",
     "city": "Evanston IL",
     "country": "USA",
-    "wiki_url": "https://en.wikipedia.org/wiki/Sir_J._Fraser_Stoddart"
+    "wiki_url": "https://en.wikipedia.org/wiki/Fraser_Stoddart"
   },
   {
     "id": 933,
@@ -21434,7 +21434,7 @@ const LAUREATES = [
     "name": "MRC Laboratory of Molecular Biology",
     "city": "Cambridge",
     "country": "United Kingdom",
-    "wiki_url": "https://en.wikipedia.org/wiki/Sir_Gregory_P._Winter"
+    "wiki_url": "https://en.wikipedia.org/wiki/Gregory_Winter"
   },
   {
     "id": 966,
