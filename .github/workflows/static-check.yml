@@ -28,4 +28,15 @@ jobs:
           test -f nobel_data.js
 
       - name: Check JavaScript syntax
-        run: node --check nobel_data.js
+        run: |
+          node --check nobel_data.js
+          node --check scripts/check-links.js
+
+      - name: Install browser-test dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser smoke tests
+        run: npm test
