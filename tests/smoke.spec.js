@@ -36,3 +36,24 @@ test('quiz renders, accepts an answer, and advances', async ({ page }) => {
   await page.getByRole('button', { name: /Next Question|See Results/ }).click();
   await expect(page.locator('.q-num')).toContainText('Question 2 of 5');
 });
+
+
+test('2026 laureates appear in search, category filters, and recent winners', async ({ page }) => {
+  const recent = await page.locator('#home').innerText();
+  expect(recent).toContain('2026');
+  await page.getByRole('menuitem', { name: 'Explorer' }).click();
+  const search = page.getByRole('searchbox', { name: 'Search laureates' });
+  await search.fill('2026');
+  await expect(page.locator('#explorer .card-nm')).toHaveCount(10);
+  for (const [category, count] of Object.entries({
+    chemistry: 2, economics: 2, literature: 1, medicine: 3, peace: 1, physics: 1,
+  })) {
+    await page.getByLabel('Filter by category').selectOption(category);
+    await expect(page.locator('#explorer .card-nm')).toHaveCount(count);
+  }
+  await search.fill('Halzen');
+  await expect(page.locator('#explorer .card-nm')).toContainText(['Francis Halzen']);
+  await page.getByLabel('Filter by category').selectOption('all');
+  await search.fill('Pillay');
+  await expect(page.locator('#explorer .card-nm')).toContainText(['Navanethem Pillay']);
+});

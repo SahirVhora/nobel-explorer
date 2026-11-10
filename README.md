@@ -1,8 +1,8 @@
 # Nobel Prize Explorer
 
-**Discover 1,026 Nobel laureates - search, filter, explore by map, timeline, and quiz. Works offline.**
+**Discover Nobel laureates through 2026 - search, filter, explore by map, timeline, and quiz. Works offline.**
 
-![Nobel Prize Explorer](https://img.shields.io/badge/laureates-1%2C026-gold) ![Pure HTML/CSS/JS](https://img.shields.io/badge/tech-HTML%2FCSS%2FJS-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Nobel Prize Explorer](https://img.shields.io/badge/awards-through_2026-gold) ![Pure HTML/CSS/JS](https://img.shields.io/badge/tech-HTML%2FCSS%2FJS-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 A fast, single-page explorer for the complete Nobel Prize dataset. No frameworks, no build step, no API calls - everything runs in the browser and works fully offline after first load.
 
@@ -33,13 +33,25 @@ No server, no install, no build step. Just open the file.
 
 ## Data
 
-The dataset (`nobel_data.js`) contains all 1,026 Nobel laureates with:
+The dataset (`nobel_data.js`) includes Nobel laureates through 2026 with:
 - Name, category, year, country, gender
 - Birth/death dates, motivation text
 - Affiliations at time of award
 - Prize share (full, half, shared)
 
 Data is loaded as a static JavaScript array - no network requests, instant filtering.
+
+### Updating award data
+
+The 2026 additions were imported from the [official Nobel Prize API](https://api.nobelprize.org/v1/laureate.json) on 9 November 2026: ten laureates across all six categories, including Economic Sciences. Names, dates, countries, motivations, affiliations and prize shares follow the API. Unknown date components remain `00`.
+
+To add an award year (requires Python 3 and an internet connection):
+
+```bash
+python3 scripts/update-laureates.py 2026
+```
+
+The importer preserves existing records and skips award records already present. The browser continues to load the static data offline.
 
 ## Tech Stack
 
